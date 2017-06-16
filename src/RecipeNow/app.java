@@ -11,8 +11,9 @@ public class app {
         
         
         System.out.println("This is a test");
-        System.out.println("This is a test from Youngmin");
+        
         System.out.println("Testing from Eric");
+        System.out.println("This is a test from Youngmin#2");
         
         
     }
