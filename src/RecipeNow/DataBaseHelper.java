@@ -32,12 +32,14 @@ public class DataBaseHelper {
         Connection dbConnection = null;
 		Statement statement = null;
                 
+                
+                
 
 		String createTableSQL = "CREATE TABLE USER_LIST("
 				+ "USER_ID int NOT NULL, "
 				+ "USERNAME VARCHAR(20) NOT NULL, "
 				+ "PASSWORD VARCHAR(20) NOT NULL, "
-				+ "PRIMARY KEY (USER_ID) "
+				+ "PRIMARY KEY (USERNAME) "
 				+ ")";
 
 		try {
@@ -67,13 +69,42 @@ public class DataBaseHelper {
 		}
     }
 
-    public void insertIntoTable(int USER_ID, String USERNAME, String PASSWORD) {
+    public void insertIntoTable(int userNum, String userName, String userPassword) throws SQLException {
 
-        try {
-            conn.createStatement().execute("INSERT INTO USER_LIST Values ('" + USER_ID + "', '" + USERNAME + "', '" + PASSWORD + "')");
-        } catch (SQLException ex) {
-            Logger.getLogger(DataBaseHelper.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Connection dbConnection = null;
+		Statement statement = null;
+
+		String insertTableSQL = "INSERT INTO USER_LIST"
+				+ "(USER_ID, USERNAME, PASSWORD ) " + "VALUES"
+				+ "(userID,'userName','userPassword')";
+				
+
+		try {
+			dbConnection = getDBConnection();
+			statement = dbConnection.createStatement();
+
+			System.out.println(insertTableSQL);
+
+			// execute insert SQL stetement
+			statement.executeUpdate(insertTableSQL);
+
+			System.out.println("Record is inserted into USER_LIST table!");
+
+		} catch (SQLException e) {
+
+			System.out.println(e.getMessage());
+
+		} finally {
+
+			if (statement != null) {
+				statement.close();
+			}
+
+			if (dbConnection != null) {
+				dbConnection.close();
+			}
+
+		}
 
     }
 
