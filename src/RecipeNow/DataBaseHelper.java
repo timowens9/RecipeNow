@@ -30,47 +30,47 @@ public class DataBaseHelper {
 
     public void createUserTable() throws SQLException {
         Connection dbConnection = null;
-        Statement statement = null;
+		Statement statement = null;
+                
 
-        String createTableSQL = "CREATE TABLE USER_NAME("
-                + "USER_ID int(5) NOT NULL, "
-                + "USERNAME VARCHAR(10) NOT NULL, "
-                + "PASSWORD VARCHAR(10) NOT NULL, "
-                + "PRIMARY KEY (USER_ID), "
-                + ")";
+		String createTableSQL = "CREATE TABLE USER_LIST("
+				+ "USER_ID int NOT NULL, "
+				+ "USERNAME VARCHAR(20) NOT NULL, "
+				+ "PASSWORD VARCHAR(20) NOT NULL, "
+				+ "PRIMARY KEY (USER_ID) "
+				+ ")";
 
-        try {
-            
-            statement = conn.createStatement();
+		try {
+			dbConnection = getDBConnection();
+			statement = dbConnection.createStatement();
 
-            System.out.println(createTableSQL);
-            // execute the SQL stetement
-            //conn.createStatement().execute(createTableSQL);
-            statement.execute(createTableSQL);
+			System.out.println(createTableSQL);
+                        // execute the SQL stetement
+			statement.execute(createTableSQL);
 
-            System.out.println("Table \"USER_NAME\" is created!");
+			System.out.println("Table \"dbuser\" is created!");
 
-        } catch (SQLException e) {
+		} catch (SQLException e) {
 
-            System.out.println(e.getMessage());
+			System.out.println(e.getMessage());
 
-        } finally {
+		} finally {
 
-            if (statement != null) {
-                statement.close();
-            }
+			if (statement != null) {
+				statement.close();
+			}
 
-            if (dbConnection != null) {
-                dbConnection.close();
-            }
+			if (dbConnection != null) {
+				dbConnection.close();
+			}
 
-        }
+		}
     }
 
-    public void insertIntoTable(int userID, String userName, String password) {
+    public void insertIntoTable(int USER_ID, String USERNAME, String PASSWORD) {
 
         try {
-            conn.createStatement().execute("INSERT INTO USER_NAME Values ('" + userID + "', '" + userName + "', '" + password + "')");
+            conn.createStatement().execute("INSERT INTO USER_LIST Values ('" + USER_ID + "', '" + USERNAME + "', '" + PASSWORD + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -89,6 +89,35 @@ public class DataBaseHelper {
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+    }
+
+    private static Connection getDBConnection() {
+
+        Connection dbConnection = null;
+
+        try {
+
+            Class.forName(DRIVER);
+
+        } catch (ClassNotFoundException e) {
+
+            System.out.println(e.getMessage());
+
+        }
+
+        try {
+
+            dbConnection = DriverManager.getConnection(JDBC_URL);
+            return dbConnection;
+
+        } catch (SQLException e) {
+
+            System.out.println(e.getMessage());
+
+        }
+
+        return dbConnection;
 
     }
 
