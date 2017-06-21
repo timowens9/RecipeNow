@@ -26,17 +26,21 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace pref="73" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                  <Component id="loginPage_userName" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="loginPage_Login" min="-2" pref="100" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
-                      <Component id="loginPage_Exit" min="-2" pref="90" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="loginPage_userName" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="loginPage_Login" min="-2" pref="100" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                          <Component id="loginPage_Exit" min="-2" pref="90" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="loginPage_passWord" max="32767" attributes="0"/>
+                      <Component id="loginPage_registration" max="32767" attributes="0"/>
+                      <Component id="loginPage_Delete" max="32767" attributes="0"/>
+                      <Component id="loginPage_printAccounts" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="loginPage_passWord" max="32767" attributes="0"/>
-                  <Component id="loginPage_registration" max="32767" attributes="0"/>
-                  <Component id="loginPage_Delete" max="32767" attributes="0"/>
-                  <Component id="loginPage_printAccounts" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
           </Group>
@@ -45,9 +49,13 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="97" max="32767" attributes="0"/>
+              <EmptySpace pref="62" max="32767" attributes="0"/>
+              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="loginPage_userName" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="loginPage_passWord" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -84,7 +92,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="loginPage_userName">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Enter Username"/>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="loginPage_userNameMouseClicked"/>
@@ -92,11 +100,11 @@
     </Component>
     <Component class="javax.swing.JPasswordField" name="loginPage_passWord">
       <Properties>
-        <Property name="text" type="java.lang.String" value="                "/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="loginPage_passWordMouseClicked"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loginPage_passWordActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="loginPage_registration">
@@ -122,6 +130,16 @@
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="loginPage_printAccountsMouseClicked"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Password"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Username"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

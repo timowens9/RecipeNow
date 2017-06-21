@@ -12,8 +12,8 @@ public class DatabaseHelper {
     private static final String JDBC_URL = "jdbc:mysql://"
             + "sql9.freemysqlhosting.net:3306/sql9181289?"
             + "user=sql9181289&password=d5uI7fHA5U";
-    private static Connection dbConnection = null;
-    private static Statement statement = null;
+    private Connection dbConnection = null;
+    private Statement statement = null;
 
     public DatabaseHelper() {
         dbConnection = getDBConnection();
@@ -109,7 +109,7 @@ public class DatabaseHelper {
         }
     }
    
-    private static Connection getDBConnection() {
+    private Connection getDBConnection() {
 
         try {
             Class.forName(DRIVER).newInstance();
@@ -155,38 +155,21 @@ public class DatabaseHelper {
     public boolean deleteAccount(String username) throws SQLException {
         
         statement = dbConnection.createStatement();
-        int userid = -1;
+        int userID;
         // account table 
-        ResultSet res = statement.executeQuery("SELECT * FROM recipe_users");
-        ResultSet res2 = res;
-        while (res.next()) {
-            if(res.getString("username").equals(username)) {
-                userid = Integer.parseInt(res.getString("userID"));
-            } 
-        }
+        ResultSet res = statement.executeQuery("SELECT * FROM recipe_users WHERE username='"+username+"'");
+        if (res.first())
+            userID = res.getInt("userID");
+        else
+            return false;
         
   
         
-        System.out.println(userid); 
-        
-        // TODO: Auto increment starts from 0
-        if(userid == -1) {
-            System.out.println("Username not found");
-        } else {
-            // Delete account by userid
-            String num = Integer.toString(userid);
-            String deleteStatement = "DELETE FROM recipe_users WHERE userID=" + num + "";
-            statement.executeUpdate(deleteStatement);
-            
-        }    
-        
-        while (res2.next()) {
-            if(res2.getString("username").equals(username)) {
-                return false;
-            } 
-        }
-        
-        return true; 
+        System.out.println(userID); 
+        // Delete account by userid
+        String deleteStatement = "DELETE FROM recipe_users WHERE userID=" + userID;
+        int deleteResult = statement.executeUpdate(deleteStatement); 
+        return deleteResult > 0;
     }
 
 }

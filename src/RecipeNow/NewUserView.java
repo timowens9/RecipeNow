@@ -1,19 +1,9 @@
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package RecipeNow;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,18 +12,14 @@ import javax.swing.JOptionPane;
  */
 public class NewUserView extends javax.swing.JFrame implements GuiHelper {
 
-    /**
-     * Creates new form LoginPage
-     */
-    
-    private DatabaseHelper db = new DatabaseHelper();
+    private DatabaseHelper db;
     private boolean isAuthenticated = false;
     private String username;
     private int userid;
     private NewUserCntl newUserCntl;
     
     public NewUserView(NewUserCntl newUserCntl) {
-        
+        this.db = new DatabaseHelper();
         this.newUserCntl = newUserCntl;
         initComponents();  
         
@@ -55,6 +41,8 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
         loginPage_registration = new javax.swing.JButton();
         loginPage_Delete = new javax.swing.JButton();
         loginPage_printAccounts = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
@@ -73,18 +61,22 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
             }
         });
 
-        loginPage_userName.setText("Enter Username");
+        loginPage_userName.setToolTipText("");
         loginPage_userName.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 loginPage_userNameMouseClicked(evt);
             }
         });
 
-        loginPage_passWord.setText("                ");
         loginPage_passWord.setToolTipText("");
         loginPage_passWord.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 loginPage_passWordMouseClicked(evt);
+            }
+        });
+        loginPage_passWord.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginPage_passWordActionPerformed(evt);
             }
         });
 
@@ -109,30 +101,41 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
             }
         });
 
+        jLabel1.setText("Password");
+
+        jLabel2.setText("Username");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(73, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(loginPage_userName)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(loginPage_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(46, 46, 46)
-                        .addComponent(loginPage_Exit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(loginPage_passWord)
-                    .addComponent(loginPage_registration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(loginPage_Delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(loginPage_printAccounts, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(loginPage_userName)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(loginPage_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(46, 46, 46)
+                            .addComponent(loginPage_Exit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(loginPage_passWord)
+                        .addComponent(loginPage_registration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loginPage_Delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loginPage_printAccounts, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(73, 73, 73))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(97, Short.MAX_VALUE)
+                .addContainerGap(62, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loginPage_userName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loginPage_passWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -278,53 +281,43 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
         
         
         String userName = loginPage_userName.getText();
-        String userPw = new String(loginPage_passWord.getPassword());
+        String userPw = String.valueOf(loginPage_passWord.getPassword());
             
         if (!checkNull) {
-            
-            String query = ("SELECT * FROM recipe_users");
-            ResultSet res = null;
-            
-            
-            // Get data from mysql
+            String query = "SELECT * FROM recipe_users WHERE username = '" + userName + "' AND password='" + userPw + "'";
+            ResultSet res;
             try {
-                res = this.db.getQuerySet(query);
-                // Get resultset from MySQL
-            } catch (SQLException ex) {
-                System.out.println("Failed to get resultset from MySQL");
-            }
-            
-            // Run through resultset
-            
-            try {
-                while(res.next()) {
-                    //System.out.println("UserId: " +  res.getString("userID") + " User: " + res.getString("username") + "; Password: " + res.getString("password"));
-                    if(res.getString("username").trim().equals(userName) && res.getString("password").trim().equals(userPw)) {
-                               
-                        JOptionPane.showMessageDialog(rootPane, "You may delete this account now \nUserid: " + res.getString("userID")
-                                + "\nUsername: " + userName, "Delete Account?", HEIGHT); 
-                        auth = true;
-                        boolean deleteSuccess = this.db.deleteAccount(userName);
-                        if(deleteSuccess) {
-                            JOptionPane.showMessageDialog(rootPane, "Account deleted\nUserid: " + res.getString("userID")
-                                + "\nUsername: " + userName, "Deleted Account", HEIGHT); 
-                        }
-                        this.db.printTable();
-                        resetComponent();
-                    }                 
+                res = db.getQuerySet(query);
+                if (res.first()){
+                    int userID = res.getInt("userID");
+                    JOptionPane.showMessageDialog(rootPane, "You may delete this account now \nUserid: " + userID
+                            + "\nUsername: " + userName, "Delete Account?", HEIGHT); 
+                    auth = true;
+                    boolean deleteSuccess = this.db.deleteAccount(userName);
+                    if(deleteSuccess) {
+                        JOptionPane.showMessageDialog(rootPane, "Account deleted\nUserid: " + userID
+                            + "\nUsername: " + userName, "Deleted Account", HEIGHT); 
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(rootPane, "Account was not deleted\nUser ID: " + userID, "Error", HEIGHT);
+                    }
+                    resetComponent();
                 }
-            } catch (SQLException ex) {
-                System.out.println("Failed to get resultset from MySQL");
-                System.out.println(ex.toString());
+                else{
+                    JOptionPane.showMessageDialog(rootPane, "No account exists with these credentials", "No Account Exists",HEIGHT);
+                }
             }
+            catch(SQLException ex){
+                System.out.println("SQL Exception: " + ex.getMessage());
+            }
+        }
+                // Get resultset from MySQL
+            
             
             if (!auth) {
                 JOptionPane.showMessageDialog(rootPane, "Authentication Failed", "Error", HEIGHT);
             }
-        }
-        
-        
-        
+      
     }//GEN-LAST:event_loginPage_DeleteMouseClicked
 
     private void loginPage_printAccountsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_printAccountsMouseClicked
@@ -336,8 +329,14 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
         }
     }//GEN-LAST:event_loginPage_printAccountsMouseClicked
 
+    private void loginPage_passWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginPage_passWordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_loginPage_passWordActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JButton loginPage_Delete;
     private javax.swing.JButton loginPage_Exit;
     private javax.swing.JButton loginPage_Login;
@@ -350,21 +349,14 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
     @Override
     public boolean checkNull() {
         // Check if the two textfields are null or default    
-        String chkUserName = "Enter Username";
-        String currentUserName = loginPage_userName.getText();
-        String currentPassWord = loginPage_passWord.getPassword().toString().trim();
-        
-        // Return false if text fiels are empty or in default state 
-        return currentUserName.equals(chkUserName) || currentUserName.equals("")
-                || currentPassWord.equals("");
-        
+        return this.loginPage_userName.getText().equals("") || loginPage_passWord.getPassword().length == 0;
     }
 
     @Override
     public void resetComponent() {
         
         loginPage_userName.setText("");
-        loginPage_passWord.setText("          ");
+        loginPage_passWord.setText("");
     }
 
     @Override
