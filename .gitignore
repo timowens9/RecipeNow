@@ -14,7 +14,7 @@ nbproject/
 *.txt
 .nb-gradle/
 *.xml
-*.properties
+
 *.log
 # End of https://www.gitignore.io/api/netbeans
-*.xml
+
