@@ -30,7 +30,6 @@ public class app {
         NewUserCntl start = new NewUserCntl();
     
         
-        
     }
     
 

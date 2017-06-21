@@ -269,3 +269,5 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
+
+
