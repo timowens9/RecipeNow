@@ -151,5 +151,42 @@ public class DatabaseHelper {
         return hasDuplicate;
         
     }
+    
+    public boolean deleteAccount(String username) throws SQLException {
+        
+        statement = dbConnection.createStatement();
+        int userid = -1;
+        // account table 
+        ResultSet res = statement.executeQuery("SELECT * FROM recipe_users");
+        ResultSet res2 = res;
+        while (res.next()) {
+            if(res.getString("username").equals(username)) {
+                userid = Integer.parseInt(res.getString("userID"));
+            } 
+        }
+        
+  
+        
+        System.out.println(userid); 
+        
+        // TODO: Auto increment starts from 0
+        if(userid == -1) {
+            System.out.println("Username not found");
+        } else {
+            // Delete account by userid
+            String num = Integer.toString(userid);
+            String deleteStatement = "DELETE FROM recipe_users WHERE userID=" + num + "";
+            statement.executeUpdate(deleteStatement);
+            
+        }    
+        
+        while (res2.next()) {
+            if(res2.getString("username").equals(username)) {
+                return false;
+            } 
+        }
+        
+        return true; 
+    }
 
 }
