@@ -9,6 +9,7 @@ nbdist/
 log/
 seg0/
 tmp0/
+nbproject/
 *.lck
 *.txt
 .nb-gradle/
