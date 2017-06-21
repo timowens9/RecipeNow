@@ -11,6 +11,7 @@ public class app {
     
      public static void main(String[] args) throws SQLException {
         
+
         
         //DatabaseHelper db = new DatabaseHelper();
         
@@ -31,6 +32,16 @@ public class app {
     
         
         
+=======
+         
+        // NewUserCntl user = new NewUserCntl();
+        DatabaseHelper db = new DatabaseHelper();
+        //db.createUserTable();
+        //db.insertIntoTable("TestUser","testPass");
+        // db.insertIntoTable("Tim", "dogbone");
+        db.printTable();
+        //db.closeConnection();
+
     }
     
 
