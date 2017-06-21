@@ -12,4 +12,6 @@ public class NewUserCntl {
         userView.setVisible(true);
     }
     
+}
+    
 

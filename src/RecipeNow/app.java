@@ -29,19 +29,7 @@ public class app {
         */
         // Start login page
         NewUserCntl start = new NewUserCntl();
-    
         
-        
-=======
-         
-        // NewUserCntl user = new NewUserCntl();
-        DatabaseHelper db = new DatabaseHelper();
-        //db.createUserTable();
-        //db.insertIntoTable("TestUser","testPass");
-        // db.insertIntoTable("Tim", "dogbone");
-        db.printTable();
-        //db.closeConnection();
-
     }
     
 
