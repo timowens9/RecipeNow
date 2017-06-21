@@ -6,10 +6,14 @@
  */
 package RecipeNow;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 /**
@@ -49,6 +53,8 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
         loginPage_userName = new javax.swing.JTextField();
         loginPage_passWord = new javax.swing.JPasswordField();
         loginPage_registration = new javax.swing.JButton();
+        loginPage_Delete = new javax.swing.JButton();
+        loginPage_printAccounts = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
@@ -89,6 +95,20 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
             }
         });
 
+        loginPage_Delete.setText("Delete Account");
+        loginPage_Delete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                loginPage_DeleteMouseClicked(evt);
+            }
+        });
+
+        loginPage_printAccounts.setText("Print Account List");
+        loginPage_printAccounts.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                loginPage_printAccountsMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -102,13 +122,15 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
                         .addGap(46, 46, 46)
                         .addComponent(loginPage_Exit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(loginPage_passWord)
-                    .addComponent(loginPage_registration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(loginPage_registration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(loginPage_Delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(loginPage_printAccounts, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(73, 73, 73))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(109, Short.MAX_VALUE)
+                .addContainerGap(97, Short.MAX_VALUE)
                 .addComponent(loginPage_userName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(loginPage_passWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -116,9 +138,13 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loginPage_Login)
                     .addComponent(loginPage_Exit))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loginPage_registration)
-                .addGap(51, 51, 51))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(loginPage_Delete)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(loginPage_printAccounts)
+                .addContainerGap())
         );
 
         pack();
@@ -145,6 +171,9 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
             }
             
             // Run through resultset
+            
+            boolean auth = false;
+            
             try {
                 while(res.next()) {
                     //System.out.println("UserId: " +  res.getString("userID") + " User: " + res.getString("username") + "; Password: " + res.getString("password"));
@@ -155,19 +184,22 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
                         this.userid = Integer.parseInt(res.getString(("userID")));
                         this.username = userName;
                         JOptionPane.showMessageDialog(rootPane, "Login Success \nUserid: " + this.userid 
-                                + "\nUsername: " + this.username, "Success", HEIGHT);
-                        
+                                + "\nUsername: " + this.username, "Success", HEIGHT);                      
+                      
+                        auth = true;                 
                         // Go to Main JFrame
                         MainMenu mainFrame = new MainMenu(userid, username);
                         mainFrame.setVisible(true);
                         super.dispose();
                         
-                    } else {
-                        JOptionPane.showMessageDialog(rootPane, "Login Failed", "Error", HEIGHT);
-                    }
+                    } 
                 }
             } catch (SQLException ex) {
                 System.out.println("Failed to get resultset from MySQL");
+            }
+            
+            if (!auth) {
+                JOptionPane.showMessageDialog(rootPane, "Authentication Failed", "Error", HEIGHT);
             }
            
             
@@ -233,16 +265,84 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
                 Logger.getLogger(NewUserView.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        
+          
         
     }//GEN-LAST:event_loginPage_registrationMouseClicked
 
+    private void loginPage_DeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_DeleteMouseClicked
+        
+        // Check if login and pw text fields are filled 
+        boolean checkNull = checkNull();
+        // Check if user authenticated
+        boolean auth =  false;
+        
+        
+        String userName = loginPage_userName.getText();
+        String userPw = new String(loginPage_passWord.getPassword());
+            
+        if (!checkNull) {
+            
+            String query = ("SELECT * FROM recipe_users");
+            ResultSet res = null;
+            
+            
+            // Get data from mysql
+            try {
+                res = this.db.getQuerySet(query);
+                // Get resultset from MySQL
+            } catch (SQLException ex) {
+                System.out.println("Failed to get resultset from MySQL");
+            }
+            
+            // Run through resultset
+            
+            try {
+                while(res.next()) {
+                    //System.out.println("UserId: " +  res.getString("userID") + " User: " + res.getString("username") + "; Password: " + res.getString("password"));
+                    if(res.getString("username").trim().equals(userName) && res.getString("password").trim().equals(userPw)) {
+                               
+                        JOptionPane.showMessageDialog(rootPane, "You may delete this account now \nUserid: " + res.getString("userID")
+                                + "\nUsername: " + userName, "Delete Account?", HEIGHT); 
+                        auth = true;
+                        boolean deleteSuccess = this.db.deleteAccount(userName);
+                        if(deleteSuccess) {
+                            JOptionPane.showMessageDialog(rootPane, "Account deleted\nUserid: " + res.getString("userID")
+                                + "\nUsername: " + userName, "Deleted Account", HEIGHT); 
+                        }
+                        this.db.printTable();
+                        resetComponent();
+                    }                 
+                }
+            } catch (SQLException ex) {
+                System.out.println("Failed to get resultset from MySQL");
+                System.out.println(ex.toString());
+            }
+            
+            if (!auth) {
+                JOptionPane.showMessageDialog(rootPane, "Authentication Failed", "Error", HEIGHT);
+            }
+        }
+        
+        
+        
+    }//GEN-LAST:event_loginPage_DeleteMouseClicked
+
+    private void loginPage_printAccountsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_printAccountsMouseClicked
+        
+        try {
+            this.db.printTable();
+        } catch (SQLException ex) {
+            Logger.getLogger(NewUserView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_loginPage_printAccountsMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton loginPage_Delete;
     private javax.swing.JButton loginPage_Exit;
     private javax.swing.JButton loginPage_Login;
     private javax.swing.JPasswordField loginPage_passWord;
+    private javax.swing.JButton loginPage_printAccounts;
     private javax.swing.JButton loginPage_registration;
     private javax.swing.JTextField loginPage_userName;
     // End of variables declaration//GEN-END:variables
@@ -262,7 +362,9 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
 
     @Override
     public void resetComponent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        loginPage_userName.setText("");
+        loginPage_passWord.setText("          ");
     }
 
     @Override
