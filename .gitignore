@@ -6,6 +6,11 @@ build/
 nbbuild/
 dist/
 nbdist/
+log/
+seg0/
+tmp0/
+*.lck
+*.txt
 .nb-gradle/
 *.xml
 *.properties
