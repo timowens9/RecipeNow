@@ -6,15 +6,7 @@ build/
 nbbuild/
 dist/
 nbdist/
-log/
-seg0/
-tmp0/
-nbproject/
-*.lck
-*.txt
 .nb-gradle/
 *.xml
 *.properties
-*.log
 # End of https://www.gitignore.io/api/netbeans
-*.xml
