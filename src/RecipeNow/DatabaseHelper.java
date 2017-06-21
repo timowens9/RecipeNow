@@ -5,144 +5,82 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+public class DatabaseHelper {
 
-public class DataBaseHelper {
+    private static final String DRIVER = "com.mysql.jdbc.Driver";
+    private static final String JDBC_URL = "jdbc:mysql://"
+            + "sql9.freemysqlhosting.net:3306/sql9181289?"
+            + "user=sql9181289&password=d5uI7fHA5U";
+    private static Connection dbConnection = null;
+    private static Statement statement = null;
 
-    private static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
-    private static final String JDBC_URL = "jdbc:derby:RecipeNow;create=true";
-
-    Connection conn;
-
-    public DataBaseHelper() {
-        try {
-            this.conn = DriverManager.getConnection(JDBC_URL);
-            System.out.println("Connected to Database");
-        } catch (SQLException ex) {
-            Logger.getLogger(DataBaseHelper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (this.conn != null) {
-
-        }
+    public DatabaseHelper() {
+        dbConnection = getDBConnection();
+        System.out.println("Connected to Database");
 
     }
 
     public void createUserTable() throws SQLException {
-        Connection dbConnection = null;
-		Statement statement = null;
-                
-                
-                
+        String createTableSQL = "CREATE TABLE recipe_users ("
+                + "userID INT NOT NULL AUTO_INCREMENT, "
+                + "username VARCHAR(20) NOT NULL, "
+                + "password VARCHAR(20) NOT NULL, PRIMARY KEY (userID))";
+        statement = dbConnection.createStatement();
 
-		String createTableSQL = "CREATE TABLE USER_LIST("
-				+ "USER_ID int NOT NULL, "
-				+ "USERNAME VARCHAR(20) NOT NULL, "
-				+ "PASSWORD VARCHAR(20) NOT NULL, "
-				+ "PRIMARY KEY (USERNAME) "
-				+ ")";
-
-		try {
-			dbConnection = getDBConnection();
-			statement = dbConnection.createStatement();
-
-			System.out.println(createTableSQL);
-                        // execute the SQL stetement
-			statement.execute(createTableSQL);
-
-			System.out.println("Table \"dbuser\" is created!");
-
-		} catch (SQLException e) {
-
-			System.out.println(e.getMessage());
-
-		} finally {
-
-			if (statement != null) {
-				statement.close();
-			}
-
-			if (dbConnection != null) {
-				dbConnection.close();
-			}
-
-		}
-    }
-
-    public void insertIntoTable(int userNum, String userName, String userPassword) throws SQLException {
-
-        Connection dbConnection = null;
-		Statement statement = null;
-
-		String insertTableSQL = "INSERT INTO USER_LIST"
-				+ "(USER_ID, USERNAME, PASSWORD ) " + "VALUES"
-				+ "(userID,'userName','userPassword')";
-				
-
-		try {
-			dbConnection = getDBConnection();
-			statement = dbConnection.createStatement();
-
-			System.out.println(insertTableSQL);
-
-			// execute insert SQL stetement
-			statement.executeUpdate(insertTableSQL);
-
-			System.out.println("Record is inserted into USER_LIST table!");
-
-		} catch (SQLException e) {
-
-			System.out.println(e.getMessage());
-
-		} finally {
-
-			if (statement != null) {
-				statement.close();
-			}
-
-			if (dbConnection != null) {
-				dbConnection.close();
-			}
-
-		}
+        System.out.println(createTableSQL);
+        // execute the SQL stetement
+        statement.execute(createTableSQL);
+        System.out.println("Table \"dbuser\" is created!");
 
     }
 
-    public void printTable() {
+    public void insertIntoTable(String userName, String userPassword) throws SQLException {
 
-        try {
-            Statement statement = this.conn.createStatement();
-            ResultSet res = statement.executeQuery("SELECT * FROM UserTable");
-            while (res.next()) {
-                System.out.println(res.getString("user") + " " + res.getString("password"));
-            }
+        String insertTableSQL = "INSERT INTO recipe_users"
+                + "(USERNAME, PASSWORD ) " + "VALUES"
+                + "('"+userName+"','"+userPassword+"')";
+        
+                
 
-        } catch (SQLException ex) {
-            Logger.getLogger(DataBaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        dbConnection = getDBConnection();
+        statement = dbConnection.createStatement();
+
+        System.out.println(insertTableSQL);
+
+        // execute insert SQL stetement
+        statement.executeUpdate(insertTableSQL);
+
+        System.out.println("Record is inserted into recipe_users table!");
+    }
+
+    public void printTable() throws SQLException {
+
+        statement = dbConnection.createStatement();
+        ResultSet res = statement.executeQuery("SELECT * FROM recipe_users");
+        while (res.next()) {
+            System.out.println("User: " + res.getString("username") + "; Password: " + res.getString("password"));
         }
 
     }
 
+
+    public void closeConnection() throws SQLException {
+        if (statement != null) {
+            statement.close();
+        }
+
+        if (dbConnection != null) {
+            dbConnection.close();
+        }
+    }
     private static Connection getDBConnection() {
 
-        Connection dbConnection = null;
-
         try {
-		Class.forName(DRIVER).newInstance();
-		dbConnection = DriverManager.getConnection(JDBC_URL);
-		return dbConnection;
+            Class.forName(DRIVER).newInstance();
+            dbConnection = DriverManager.getConnection(JDBC_URL);
+            return dbConnection;
 
-        } catch (ClassNotFoundException|SQLException e) {
-		System.out.println(e.getMessage());
-
-        }
-
-        try {
-
-
-
-        } catch (SQLException e) {
-
+        } catch (Exception e) {
             System.out.println(e.getMessage());
 
         }
