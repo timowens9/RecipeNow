@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 public class DatabaseHelper {
 
     private static final String DRIVER = "com.mysql.jdbc.Driver";
@@ -21,44 +22,78 @@ public class DatabaseHelper {
     }
 
     public void createUserTable() throws SQLException {
-        String createTableSQL = "CREATE TABLE recipe_users ("
+        
+        // delete table if exists
+        String deleteTableSQL = "DROP TABLE IF EXISTS recipe_users"; 
+        String createTableSQL =      
+                 "CREATE TABLE recipe_users ("
                 + "userID INT NOT NULL AUTO_INCREMENT, "
                 + "username VARCHAR(20) NOT NULL, "
                 + "password VARCHAR(20) NOT NULL, PRIMARY KEY (userID))";
+        
         statement = dbConnection.createStatement();
 
-        System.out.println(createTableSQL);
+        //System.out.println(createTableSQL);
+        //System.out.println(deleteTableSQL);
         // execute the SQL stetement
+       
+        statement.execute(deleteTableSQL);
         statement.execute(createTableSQL);
-        System.out.println("Table \"dbuser\" is created!");
+ 
+        System.out.println("Table \"recipe_users\" is created!");
 
     }
 
-    public void insertIntoTable(String userName, String userPassword) throws SQLException {
+    public boolean insertIntoTable(String userName, String userPassword) throws SQLException {
 
-        String insertTableSQL = "INSERT INTO recipe_users"
+        String insertTableSQL = "INSERT INTO recipe_users" 
                 + "(USERNAME, PASSWORD ) " + "VALUES"
                 + "('"+userName+"','"+userPassword+"')";
         
-                
+        
+        boolean hasDuplicate = checkDuplicate("recipe_users", "userName", userName);
+        
+        if(!hasDuplicate) {
+            dbConnection = getDBConnection();
+            statement = dbConnection.createStatement();
 
+            System.out.println(insertTableSQL);
+
+            // execute insert SQL stetement
+            statement.executeUpdate(insertTableSQL);
+            return false;
+        } else {
+            System.out.println("There is a duplicate Username");
+            return true;
+        }
+        
+        /*
         dbConnection = getDBConnection();
         statement = dbConnection.createStatement();
 
-        System.out.println(insertTableSQL);
+        //System.out.println(insertTableSQL);
 
         // execute insert SQL stetement
         statement.executeUpdate(insertTableSQL);
-
-        System.out.println("Record is inserted into recipe_users table!");
+        */
+        
     }
-
+    /*
+    public void deleteRow(String tableName, String primaryKey) throw SQLException {
+        
+        String insertTableSQL = "DELETE FROM " + tableName + " WHERE ";
+        
+        
+    }
+    */
     public void printTable() throws SQLException {
 
         statement = dbConnection.createStatement();
         ResultSet res = statement.executeQuery("SELECT * FROM recipe_users");
+        System.out.println("---------------Currrent Table----------------");
         while (res.next()) {
-            System.out.println("User: " + res.getString("username") + "; Password: " + res.getString("password"));
+            System.out.println("UserId: "+res.getString("userID") + " Username: " + res.getString("username")
+            + " Password: " + res.getString("password"));
         }
 
     }
@@ -73,6 +108,7 @@ public class DatabaseHelper {
             dbConnection.close();
         }
     }
+   
     private static Connection getDBConnection() {
 
         try {
@@ -87,6 +123,33 @@ public class DatabaseHelper {
 
         return dbConnection;
 
+    }
+    
+    public ResultSet getQuerySet(String query) throws SQLException {
+        
+        statement = this.dbConnection.createStatement();
+        ResultSet res = statement.executeQuery(query);
+        return res;
+        
+    }
+    
+    public boolean checkDuplicate(String tableName, String columnName, String target ) throws SQLException {
+        
+        boolean hasDuplicate = false; 
+        statement = this.dbConnection.createStatement();
+        ResultSet res = statement.executeQuery("SELECT * FROM " + tableName);
+        
+        while (res.next()) {
+            // Check duplicate
+            if(res.getString(columnName).equals(target)) {
+                //System.out.println(target);
+                hasDuplicate = true;
+                return true;
+            }
+        }
+        
+        return hasDuplicate;
+        
     }
 
 }
