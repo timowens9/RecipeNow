@@ -128,19 +128,18 @@ public class DataBaseHelper {
         Connection dbConnection = null;
 
         try {
+		Class.forName(DRIVER).newInstance();
+		dbConnection = DriverManager.getConnection(JDBC_URL);
+		return dbConnection;
 
-            Class.forName(DRIVER);
-
-        } catch (ClassNotFoundException e) {
-
-            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException|SQLException e) {
+		System.out.println(e.getMessage());
 
         }
 
         try {
 
-            dbConnection = DriverManager.getConnection(JDBC_URL);
-            return dbConnection;
+
 
         } catch (SQLException e) {
 
