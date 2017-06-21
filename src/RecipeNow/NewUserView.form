@@ -35,6 +35,8 @@
                   </Group>
                   <Component id="loginPage_passWord" max="32767" attributes="0"/>
                   <Component id="loginPage_registration" max="32767" attributes="0"/>
+                  <Component id="loginPage_Delete" max="32767" attributes="0"/>
+                  <Component id="loginPage_printAccounts" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
           </Group>
@@ -43,7 +45,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="109" max="32767" attributes="0"/>
+              <EmptySpace pref="97" max="32767" attributes="0"/>
               <Component id="loginPage_userName" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="loginPage_passWord" min="-2" max="-2" attributes="0"/>
@@ -52,9 +54,13 @@
                   <Component id="loginPage_Login" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="loginPage_Exit" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="loginPage_registration" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="loginPage_Delete" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="loginPage_printAccounts" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -99,6 +105,22 @@
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="loginPage_registrationMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="loginPage_Delete">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Delete Account"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="loginPage_DeleteMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="loginPage_printAccounts">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Print Account List"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="loginPage_printAccountsMouseClicked"/>
       </Events>
     </Component>
   </SubComponents>
