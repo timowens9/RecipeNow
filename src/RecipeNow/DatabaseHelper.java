@@ -142,8 +142,7 @@ public class DatabaseHelper {
         while (res.next()) {
             // Check duplicate
             if(res.getString(columnName).equals(target)) {
-                //System.out.println(target);
-                hasDuplicate = true;
+                //System.out.println(target);             
                 return true;
             }
         }

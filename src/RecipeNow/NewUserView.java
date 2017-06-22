@@ -74,11 +74,6 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
                 loginPage_passWordMouseClicked(evt);
             }
         });
-        loginPage_passWord.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginPage_passWordActionPerformed(evt);
-            }
-        });
 
         loginPage_registration.setText("Register");
         loginPage_registration.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -329,10 +324,6 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
         }
     }//GEN-LAST:event_loginPage_printAccountsMouseClicked
 
-    private void loginPage_passWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginPage_passWordActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_loginPage_passWordActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -361,6 +352,8 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
 
     @Override
     public void closeFrame() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        // To be updated
+        
     }
 }
