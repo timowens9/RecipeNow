@@ -17,7 +17,7 @@ import javax.swing.JRootPane;
  *
  * @author Youngmin
  */
-public class NewIngredient extends javax.swing.JFrame implements GuiHelper {
+public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
 
     /**
      * Creates new form NewIngredient
@@ -25,7 +25,7 @@ public class NewIngredient extends javax.swing.JFrame implements GuiHelper {
     
     DatabaseHelper db;
     
-    public NewIngredient(DatabaseHelper db)  {
+    public IngredientMenu(DatabaseHelper db)  {
         initComponents();
         this.db = db;
     }
@@ -44,11 +44,13 @@ public class NewIngredient extends javax.swing.JFrame implements GuiHelper {
         newIng_ingName = new javax.swing.JTextField();
         newIng_ingCal = new javax.swing.JTextField();
         newIng_isDairy = new javax.swing.JCheckBox();
+        newIng_editIng = new javax.swing.JButton();
+        newIng_deleteIng = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Add Ingredient");
 
-        newIng_addIng.setText("Add");
+        newIng_addIng.setText("Add Ingredient");
         newIng_addIng.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 newIng_addIngMouseClicked(evt);
@@ -78,26 +80,36 @@ public class NewIngredient extends javax.swing.JFrame implements GuiHelper {
 
         newIng_isDairy.setText("Dairy");
 
+        newIng_editIng.setText("Edit Ingredient");
+        newIng_editIng.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                newIng_editIngMouseClicked(evt);
+            }
+        });
+
+        newIng_deleteIng.setText("Delete Ingredient");
+        newIng_deleteIng.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                newIng_deleteIngMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(newIng_ingCal, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(68, 68, 68)
-                            .addComponent(newIng_ingName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(68, 68, 68)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(newIng_isDairy)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(newIng_addIng, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(newIng_Exit, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(newIng_Exit, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(newIng_ingCal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                        .addComponent(newIng_ingName, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(newIng_isDairy, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(newIng_addIng, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(newIng_editIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(newIng_deleteIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,10 +120,14 @@ public class NewIngredient extends javax.swing.JFrame implements GuiHelper {
                 .addComponent(newIng_ingCal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newIng_isDairy)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(newIng_addIng)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(newIng_editIng, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(newIng_deleteIng)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(newIng_addIng)
-                    .addComponent(newIng_Exit))
+                .addComponent(newIng_Exit, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -138,7 +154,7 @@ public class NewIngredient extends javax.swing.JFrame implements GuiHelper {
         // Check if name and calorie text fields are filled 
         boolean checkNull = checkNull();
         boolean hasDuplicate;
-        String dairy = newIng_isDairy.isSelected() == true ? "YES" : "NO";
+        int dairy = newIng_isDairy.isSelected() == true ? 1 : 0;
         
         if(!checkNull) {
             String ingredName = newIng_ingName.getText();
@@ -159,8 +175,8 @@ public class NewIngredient extends javax.swing.JFrame implements GuiHelper {
                     System.out.println("Add Ingredient Failed");
                     JOptionPane.showMessageDialog(rootPane, "The ingredient is already in the database or Server Connection has failed", "Error", HEIGHT);
                 } else {
-                    System.out.println("Add Ingredient Success " + " Ingredient Name: " + newIng_ingName.getText() + " Ingredient Calroie " + newIng_ingName.getText());
-                    JOptionPane.showMessageDialog(rootPane, "Registration Success", "Success", HEIGHT);
+                    System.out.println("Add Ingredient Success " + " Ingredient Name: " + newIng_ingName.getText() + " Ingredient Calroie: " + newIng_ingCal.getText());
+                    JOptionPane.showMessageDialog(rootPane, "Add Ingredient Success", "Success", HEIGHT);
                 }
             } catch (SQLException ex) {
                 System.out.println("SQL Exception: " + ex.getMessage());
@@ -174,10 +190,70 @@ public class NewIngredient extends javax.swing.JFrame implements GuiHelper {
         closeFrame();
     }//GEN-LAST:event_newIng_ExitMouseClicked
 
+    private void newIng_editIngMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newIng_editIngMouseClicked
+        // Check if name and calorie text fields are filled 
+        boolean checkNull = checkNull();
+        boolean hasDuplicate = false;
+        int dairy = newIng_isDairy.isSelected() == true ? 1 : 0;
+        String ingredName = newIng_ingName.getText();
+        int ingredCal;
+        //System.out.println(checkNull());
+        if(!checkNull) {
+            try {
+                ingredCal = Integer.parseInt(newIng_ingCal.getText());
+            } catch (NumberFormatException ex) {
+                System.out.println("NumberFormatException: " + ex.getMessage());
+                JOptionPane.showMessageDialog(rootPane, "Please only enter numeric values", "Error", HEIGHT);
+                resetComponent();
+                // exit function
+                return; 
+            }
+            
+            try {
+                hasDuplicate = this.db.ingredientEditIntoTable(ingredName, ingredCal, dairy);
+            } catch (SQLException ex) {
+                System.out.println("SQL Exception: " + ex.getMessage());
+            }
+            if(hasDuplicate) {
+                System.out.println("Edit Ingredient Failed");
+                JOptionPane.showMessageDialog(rootPane, "The ingredient is already in the database or Server Connection has failed", "Error", HEIGHT);
+            } else {
+                System.out.println("Edit Ingredient Success" + " Ingredient Name: " + newIng_ingName.getText() + " Ingredient Calroie " + newIng_ingCal.getText());
+                JOptionPane.showMessageDialog(rootPane, "Edit Ingredient Success", "Success", HEIGHT);
+            } 
+        }
+        resetComponent();
+    }//GEN-LAST:event_newIng_editIngMouseClicked
+
+    private void newIng_deleteIngMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newIng_deleteIngMouseClicked
+        // Check if name and calorie text fields are filled 
+        boolean checkNull = newIng_ingName.getText().equals("Enter Ingredient Name") || newIng_ingName.getText().isEmpty();
+        boolean deleteSuccess = false;
+        if(!checkNull) {
+            try {
+                deleteSuccess = this.db.ingredientDeleteIntoTable(newIng_ingName.getText());
+            } catch (SQLException ex) {
+                System.out.println("SQL Exception: " + ex.getMessage());
+            }
+            
+            if(deleteSuccess) {
+                System.out.println("Delete Ingredient Failed");
+                JOptionPane.showMessageDialog(rootPane, "Delete Ingredient Failed", "Error", HEIGHT);
+            } else {
+                System.out.println("Delete Ingredient Success " + " Ingredient Name:" + newIng_ingName.getText());
+                JOptionPane.showMessageDialog(rootPane, "Delete Ingredient Success", "Success", HEIGHT);
+            }
+            
+        }
+        
+    }//GEN-LAST:event_newIng_deleteIngMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton newIng_Exit;
     private javax.swing.JButton newIng_addIng;
+    private javax.swing.JButton newIng_deleteIng;
+    private javax.swing.JButton newIng_editIng;
     private javax.swing.JTextField newIng_ingCal;
     private javax.swing.JTextField newIng_ingName;
     private javax.swing.JCheckBox newIng_isDairy;
@@ -199,6 +275,6 @@ public class NewIngredient extends javax.swing.JFrame implements GuiHelper {
     @Override
     public void closeFrame() {
         // Close current frame
-        NewIngredient.this.dispose();
+        IngredientMenu.this.dispose();
     }
 }
