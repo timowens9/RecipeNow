@@ -5,6 +5,8 @@
  */
 package RecipeNow;
 
+import java.sql.SQLException;
+
 /**
  *
  * @author Son
@@ -17,11 +19,13 @@ public class MainMenu extends javax.swing.JFrame {
     
     private int userid;
     private String username;
+    private DatabaseHelper db;
     
-    public MainMenu(int userid, String username) {
+    public MainMenu(int userid, String username, DatabaseHelper db) {
         
         this.userid = userid;
         this.username = username;
+        this.db = db;
         initComponents();
     }
 
@@ -34,46 +38,56 @@ public class MainMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        mainMenu_printIngList = new javax.swing.JButton();
+        mainMenu_addIng = new javax.swing.JButton();
+        mainMenu_editIng = new javax.swing.JButton();
+        mainMenu_deleteIng = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main Menu");
 
-        jButton1.setText("jButton1");
+        mainMenu_printIngList.setText("Print Ingredient List");
+        mainMenu_printIngList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mainMenu_printIngListMouseClicked(evt);
+            }
+        });
 
-        jButton2.setText("jButton2");
+        mainMenu_addIng.setText("Add Ingredient");
+        mainMenu_addIng.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mainMenu_addIngMouseClicked(evt);
+            }
+        });
 
-        jButton3.setText("jButton3");
+        mainMenu_editIng.setText("Edit Ingredient");
 
-        jButton4.setText("jButton4");
+        mainMenu_deleteIng.setText("Delete Ingredient");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(551, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton4)
-                    .addComponent(jButton3)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
+                .addContainerGap(487, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(mainMenu_printIngList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(mainMenu_addIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(mainMenu_editIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(mainMenu_deleteIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(57, 57, 57))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(59, 59, 59)
-                .addComponent(jButton1)
+                .addComponent(mainMenu_printIngList)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addComponent(mainMenu_addIng)
                 .addGap(18, 18, 18)
-                .addComponent(jButton3)
+                .addComponent(mainMenu_editIng)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4)
+                .addComponent(mainMenu_deleteIng)
                 .addContainerGap(292, Short.MAX_VALUE))
         );
 
@@ -81,14 +95,36 @@ public class MainMenu extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void mainMenu_printIngListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainMenu_printIngListMouseClicked
+        
+        try {
+            db.printIngredientTable();
+        } catch (SQLException ex) {
+            System.out.println("SQL Exception: " + ex.getMessage());
+        }
+       
+    }//GEN-LAST:event_mainMenu_printIngListMouseClicked
+
+    private void mainMenu_addIngMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainMenu_addIngMouseClicked
+        
+        // Open new ingredient window
+        NewIngredient newIngredientMenu = new NewIngredient(this.db);
+        
+        // Disable 'X' button
+        newIngredientMenu.setDefaultCloseOperation(0); //TODO: make the 'X" button only close the frame not the whole program
+        newIngredientMenu.setVisible(true);
+        
+        
+    }//GEN-LAST:event_mainMenu_addIngMouseClicked
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton mainMenu_addIng;
+    private javax.swing.JButton mainMenu_deleteIng;
+    private javax.swing.JButton mainMenu_editIng;
+    private javax.swing.JButton mainMenu_printIngList;
     // End of variables declaration//GEN-END:variables
 }
