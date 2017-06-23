@@ -186,7 +186,7 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
                       
                         auth = true;                 
                         // Go to Main JFrame
-                        MainMenu mainFrame = new MainMenu(userid, username);
+                        MainMenu mainFrame = new MainMenu(userid, username, db);
                         mainFrame.setVisible(true);
                         super.dispose();
                         
@@ -205,7 +205,7 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
     }//GEN-LAST:event_loginPage_LoginMouseClicked
 
     private void loginPage_userNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_userNameMouseClicked
-        
+  
         // Empty text field when user clicks 
         if(loginPage_userName.getText().equals("Enter Username") || loginPage_userName.getText().isEmpty()) {
             loginPage_userName.setText(""); 
@@ -244,7 +244,7 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
             //String IQuery = "INSERT INTO `recipe_users`(`username`,`password`) VALUES('" + username + "', '" + password + "')";
             //System.out.println(IQuery);//print on console
             try {
-                hasDuplicate = this.db.insertIntoTable(username, password);
+                hasDuplicate = this.db.userInsertIntoTable(username, password);
                 if(hasDuplicate) {
                     System.out.println("Registration failed");
                     JOptionPane.showMessageDialog(rootPane, "The username is already taken or Server Connection has failed", "Error", HEIGHT);
@@ -258,7 +258,7 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
             }
             
             try {
-                this.db.printTable();
+                this.db.printUserTable();
             } catch (SQLException ex) {
                 Logger.getLogger(NewUserView.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -318,9 +318,9 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
     private void loginPage_printAccountsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_printAccountsMouseClicked
         
         try {
-            this.db.printTable();
+            this.db.printUserTable();
         } catch (SQLException ex) {
-            Logger.getLogger(NewUserView.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("SQL Exception: " + ex.getMessage());
         }
     }//GEN-LAST:event_loginPage_printAccountsMouseClicked
 
@@ -340,12 +340,11 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
     @Override
     public boolean checkNull() {
         // Check if the two textfields are null or default    
-        return this.loginPage_userName.getText().equals("") || loginPage_passWord.getPassword().length == 0;
+        return loginPage_userName.getText().equals("") || loginPage_passWord.getPassword().length == 0;
     }
 
     @Override
     public void resetComponent() {
-        
         loginPage_userName.setText("");
         loginPage_passWord.setText("");
     }
