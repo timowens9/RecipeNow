@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JTextField;
 
 public class DatabaseHelper {
 
@@ -45,7 +46,7 @@ public class DatabaseHelper {
                 + "ingredientID INT NOT NULL AUTO_INCREMENT, "
                 + "ingredient_Name VARCHAR(50) NOT NULL, "
                 + "calories_Count INT NOT NULL, "
-                + "is_dairy VarChar(10), "
+                + "is_dairy VarChar(10), " // is_dariy bit ? 
                 + "PRIMARY KEY (ingredientID))";
 
         statement = dbConnection.createStatement();
@@ -53,11 +54,17 @@ public class DatabaseHelper {
         System.out.println("Table \"Ingredient\" is created!");
     }
 
-    public boolean ingredientInsertIntoTable(String ingredName, int calories, String dairy) throws SQLException {
+    public boolean ingredientInsertIntoTable(String ingredName, int calories, int dairy) throws SQLException {
 
         String insertTableSQL = "INSERT INTO ingredient"
                 + "(ingredient_Name, calories_Count, is_dairy) " + "VALUES"
+                + "('" + ingredName + "', '" + calories + "', " + dairy + ")";
+        /*
+        String insertTableSQL = "INSERT INTO ingredient"
+                + "(ingredient_Name, calories_Count, is_dairy) " + "VALUES"
                 + "('" + ingredName + "', '" + calories + "', '" + dairy + "')";
+        */
+        //System.out.println(insertTableSQL);
 
         boolean hasDuplicate = checkDuplicate("ingredient", "ingredient_Name", ingredName);
         if (!hasDuplicate) {
@@ -75,6 +82,40 @@ public class DatabaseHelper {
         }
 
     }
+    
+    public boolean ingredientEditIntoTable(String ingredName, int calories, int dairy) throws SQLException{
+        
+        String insertEditTableSQL = "UPDATE ingredient "
+                + "SET ingredient_Name = " 
+                + "'" + ingredName + "'" + ", "
+                + "calories_Count = "
+                + "'" + calories + "'" + ", "
+                + "is_Dairy = "
+                + dairy
+                + " WHERE ingredient_Name = " + "'" + ingredName + "';";
+        
+        System.out.println(insertEditTableSQL);
+        dbConnection = getDBConnection();
+        statement = dbConnection.createStatement();
+        // execute insert SQL stetement
+        statement.executeUpdate(insertEditTableSQL);
+        return false;
+             
+    }
+    
+    public boolean ingredientDeleteIntoTable(String ingredName) throws SQLException {
+        
+        String insertDeleteTableSQL = "DELETE FROM ingredient "
+                + "WHERE ingredient_name = " + "'" + ingredName + "';";
+        System.out.println(insertDeleteTableSQL);
+        dbConnection = getDBConnection();
+        statement = dbConnection.createStatement();
+        // execute insert SQL statement
+        statement.execute(insertDeleteTableSQL);
+        return false;
+    }
+    
+    
 
     public boolean userInsertIntoTable(String userName, String userPassword) throws SQLException {
 

@@ -40,8 +40,6 @@ public class MainMenu extends javax.swing.JFrame {
 
         mainMenu_printIngList = new javax.swing.JButton();
         mainMenu_addIng = new javax.swing.JButton();
-        mainMenu_editIng = new javax.swing.JButton();
-        mainMenu_deleteIng = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main Menu");
@@ -53,16 +51,12 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
-        mainMenu_addIng.setText("Add Ingredient");
+        mainMenu_addIng.setText("Ingredient Menu");
         mainMenu_addIng.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 mainMenu_addIngMouseClicked(evt);
             }
         });
-
-        mainMenu_editIng.setText("Edit Ingredient");
-
-        mainMenu_deleteIng.setText("Delete Ingredient");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -72,9 +66,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addContainerGap(487, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(mainMenu_printIngList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(mainMenu_addIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(mainMenu_editIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(mainMenu_deleteIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(mainMenu_addIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(57, 57, 57))
         );
         layout.setVerticalGroup(
@@ -84,11 +76,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addComponent(mainMenu_printIngList)
                 .addGap(18, 18, 18)
                 .addComponent(mainMenu_addIng)
-                .addGap(18, 18, 18)
-                .addComponent(mainMenu_editIng)
-                .addGap(18, 18, 18)
-                .addComponent(mainMenu_deleteIng)
-                .addContainerGap(292, Short.MAX_VALUE))
+                .addContainerGap(376, Short.MAX_VALUE))
         );
 
         pack();
@@ -108,7 +96,7 @@ public class MainMenu extends javax.swing.JFrame {
     private void mainMenu_addIngMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainMenu_addIngMouseClicked
         
         // Open new ingredient window
-        NewIngredient newIngredientMenu = new NewIngredient(this.db);
+        IngredientMenu newIngredientMenu = new IngredientMenu(this.db);
         
         // Disable 'X' button
         newIngredientMenu.setDefaultCloseOperation(0); //TODO: make the 'X" button only close the frame not the whole program
@@ -123,8 +111,6 @@ public class MainMenu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton mainMenu_addIng;
-    private javax.swing.JButton mainMenu_deleteIng;
-    private javax.swing.JButton mainMenu_editIng;
     private javax.swing.JButton mainMenu_printIngList;
     // End of variables declaration//GEN-END:variables
 }
