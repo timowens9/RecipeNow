@@ -5,13 +5,14 @@
  */
 package RecipeNow;
 
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 
 /**
  *
  * @author Son
  */
-public class MainMenu extends javax.swing.JFrame {
+public class MainMenu extends javax.swing.JFrame{
 
     /**
      * Creates new form MainMenu
@@ -41,7 +42,7 @@ public class MainMenu extends javax.swing.JFrame {
         mainMenu_printIngList = new javax.swing.JButton();
         mainMenu_addIng = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Main Menu");
 
         mainMenu_printIngList.setText("Print Ingredient List");
@@ -98,8 +99,6 @@ public class MainMenu extends javax.swing.JFrame {
         // Open new ingredient window
         IngredientMenu newIngredientMenu = new IngredientMenu(this.db);
         
-        // Disable 'X' button
-        newIngredientMenu.setDefaultCloseOperation(0); //TODO: make the 'X" button only close the frame not the whole program
         newIngredientMenu.setVisible(true);
         
         
@@ -113,4 +112,13 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton mainMenu_addIng;
     private javax.swing.JButton mainMenu_printIngList;
     // End of variables declaration//GEN-END:variables
+    @Override
+    protected void processWindowEvent(final WindowEvent e) {
+        super.processWindowEvent(e);
+
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+            RecipeNow.app.start = new NewUserCntl();
+            dispose();
+        }
+    }
 }

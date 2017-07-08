@@ -8,27 +8,27 @@ package RecipeNow;
 import java.sql.SQLException;
 
 public class app {
-    
+    public static NewUserCntl start;
      public static void main(String[] args) throws SQLException {
         
 
         
-        DatabaseHelper db = new DatabaseHelper();
+        //DatabaseHelper db = new DatabaseHelper();
         
         //This would erase the db and create new table
-        db.createUserTable();
+        //db.createUserTable();
         //db.createIngredientTable();
         //Testing
         //db.insertIntoTable("TestUser2","testPass");
         //db.printTable();
-        db.closeConnection();
+        //db.closeConnection();
         
         /*
         username: test1
         password: test1
         */
         // Start login page
-        NewUserCntl start = new NewUserCntl();
+        start = new NewUserCntl();
         
     }
     

@@ -121,7 +121,7 @@ public class DatabaseHelper {
                 + "(USERNAME, PASSWORD ) " + "VALUES"
                 + "('" + userName + "','" + userPassword + "')";
 
-        boolean hasDuplicate = checkDuplicate("recipe_users", "userName", userName);
+        boolean hasDuplicate = checkDuplicate("recipe_users", "username", userName);
 
         if (!hasDuplicate) {
             dbConnection = getDBConnection();
