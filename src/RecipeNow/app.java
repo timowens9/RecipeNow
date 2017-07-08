@@ -8,7 +8,7 @@ package RecipeNow;
 import java.sql.SQLException;
 
 public class app {
-    
+    public static NewUserCntl start;
      public static void main(String[] args) throws SQLException {
         
 
@@ -17,7 +17,7 @@ public class app {
         
         //This would erase the db and create new table
         //db.createUserTable();
-        
+        //db.createIngredientTable();
         //Testing
         //db.insertIntoTable("TestUser2","testPass");
         //db.printTable();
@@ -28,7 +28,7 @@ public class app {
         password: test1
         */
         // Start login page
-        NewUserCntl start = new NewUserCntl();
+        start = new NewUserCntl();
         
     }
     

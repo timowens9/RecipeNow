@@ -40,27 +40,19 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
     private void initComponents() {
 
         newIng_addIng = new javax.swing.JButton();
-        newIng_Exit = new javax.swing.JButton();
         newIng_ingName = new javax.swing.JTextField();
         newIng_ingCal = new javax.swing.JTextField();
         newIng_isDairy = new javax.swing.JCheckBox();
         newIng_editIng = new javax.swing.JButton();
         newIng_deleteIng = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add Ingredient");
 
         newIng_addIng.setText("Add Ingredient");
-        newIng_addIng.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                newIng_addIngMouseClicked(evt);
-            }
-        });
-
-        newIng_Exit.setText("Cancel");
-        newIng_Exit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                newIng_ExitMouseClicked(evt);
+        newIng_addIng.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newIng_addIngActionPerformed(evt);
             }
         });
 
@@ -81,16 +73,16 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
         newIng_isDairy.setText("Dairy");
 
         newIng_editIng.setText("Edit Ingredient");
-        newIng_editIng.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                newIng_editIngMouseClicked(evt);
+        newIng_editIng.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newIng_editIngActionPerformed(evt);
             }
         });
 
         newIng_deleteIng.setText("Delete Ingredient");
-        newIng_deleteIng.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                newIng_deleteIngMouseClicked(evt);
+        newIng_deleteIng.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newIng_deleteIngActionPerformed(evt);
             }
         });
 
@@ -101,14 +93,12 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(newIng_Exit, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(newIng_ingCal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                        .addComponent(newIng_ingName, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(newIng_isDairy, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(newIng_addIng, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(newIng_editIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(newIng_deleteIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(newIng_ingCal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                    .addComponent(newIng_ingName, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(newIng_isDairy, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(newIng_addIng, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(newIng_editIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(newIng_deleteIng, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -126,9 +116,7 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
                 .addComponent(newIng_editIng, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newIng_deleteIng)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(newIng_Exit, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -139,6 +127,7 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
         // Empty text field when user clicks 
         if(newIng_ingName.getText().equals("Enter Ingredient Name") || newIng_ingName.getText().isEmpty()) {
             newIng_ingName.setText(""); 
+            
         }
     }//GEN-LAST:event_newIng_ingNameMouseClicked
 
@@ -149,8 +138,7 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
         }  
     }//GEN-LAST:event_newIng_ingCalMouseClicked
 
-    private void newIng_addIngMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newIng_addIngMouseClicked
-        
+    private void newIng_addIngActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newIng_addIngActionPerformed
         // Check if name and calorie text fields are filled 
         boolean checkNull = checkNull();
         boolean hasDuplicate;
@@ -175,7 +163,7 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
                     System.out.println("Add Ingredient Failed");
                     JOptionPane.showMessageDialog(rootPane, "The ingredient is already in the database or Server Connection has failed", "Error", HEIGHT);
                 } else {
-                    System.out.println("Add Ingredient Success " + " Ingredient Name: " + newIng_ingName.getText() + " Ingredient Calroie: " + newIng_ingCal.getText());
+                    System.out.println("Add Ingredient Success " + " Ingredient Name: " + newIng_ingName.getText() + " Ingredient Calories: " + newIng_ingCal.getText());
                     JOptionPane.showMessageDialog(rootPane, "Add Ingredient Success", "Success", HEIGHT);
                 }
             } catch (SQLException ex) {
@@ -184,13 +172,9 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
         }
         resetComponent();
         
-    }//GEN-LAST:event_newIng_addIngMouseClicked
+    }//GEN-LAST:event_newIng_addIngActionPerformed
 
-    private void newIng_ExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newIng_ExitMouseClicked
-        closeFrame();
-    }//GEN-LAST:event_newIng_ExitMouseClicked
-
-    private void newIng_editIngMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newIng_editIngMouseClicked
+    private void newIng_editIngActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newIng_editIngActionPerformed
         // Check if name and calorie text fields are filled 
         boolean checkNull = checkNull();
         boolean hasDuplicate = false;
@@ -218,14 +202,14 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
                 System.out.println("Edit Ingredient Failed");
                 JOptionPane.showMessageDialog(rootPane, "The ingredient is already in the database or Server Connection has failed", "Error", HEIGHT);
             } else {
-                System.out.println("Edit Ingredient Success" + " Ingredient Name: " + newIng_ingName.getText() + " Ingredient Calroie " + newIng_ingCal.getText());
+                System.out.println("Edit Ingredient Success" + " Ingredient Name: " + newIng_ingName.getText() + " Ingredient Calories " + newIng_ingCal.getText());
                 JOptionPane.showMessageDialog(rootPane, "Edit Ingredient Success", "Success", HEIGHT);
             } 
         }
         resetComponent();
-    }//GEN-LAST:event_newIng_editIngMouseClicked
+    }//GEN-LAST:event_newIng_editIngActionPerformed
 
-    private void newIng_deleteIngMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newIng_deleteIngMouseClicked
+    private void newIng_deleteIngActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newIng_deleteIngActionPerformed
         // Check if name and calorie text fields are filled 
         boolean checkNull = newIng_ingName.getText().equals("Enter Ingredient Name") || newIng_ingName.getText().isEmpty();
         boolean deleteSuccess = false;
@@ -245,12 +229,10 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
             }
             
         }
-        
-    }//GEN-LAST:event_newIng_deleteIngMouseClicked
+    }//GEN-LAST:event_newIng_deleteIngActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton newIng_Exit;
     private javax.swing.JButton newIng_addIng;
     private javax.swing.JButton newIng_deleteIng;
     private javax.swing.JButton newIng_editIng;

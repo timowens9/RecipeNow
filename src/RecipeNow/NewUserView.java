@@ -17,12 +17,13 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
     private String username;
     private int userid;
     private NewUserCntl newUserCntl;
-    
+
     public NewUserView(NewUserCntl newUserCntl) {
         this.db = new DatabaseHelper();
         this.newUserCntl = newUserCntl;
-        initComponents();  
-        
+        initComponents();
+        getRootPane().setDefaultButton(loginPage_Login);
+
     }
 
     /**
@@ -35,7 +36,6 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
     private void initComponents() {
 
         loginPage_Login = new javax.swing.JButton();
-        loginPage_Exit = new javax.swing.JButton();
         loginPage_userName = new javax.swing.JTextField();
         loginPage_passWord = new javax.swing.JPasswordField();
         loginPage_registration = new javax.swing.JButton();
@@ -44,55 +44,39 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Login");
 
         loginPage_Login.setText("Login");
-        loginPage_Login.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginPage_LoginMouseClicked(evt);
-            }
-        });
-
-        loginPage_Exit.setText("Exit");
-        loginPage_Exit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginPage_ExitMouseClicked(evt);
+        loginPage_Login.setSelected(true);
+        loginPage_Login.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginPage_LoginActionPerformed(evt);
             }
         });
 
         loginPage_userName.setToolTipText("");
-        loginPage_userName.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginPage_userNameMouseClicked(evt);
-            }
-        });
 
         loginPage_passWord.setToolTipText("");
-        loginPage_passWord.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginPage_passWordMouseClicked(evt);
-            }
-        });
 
         loginPage_registration.setText("Register");
-        loginPage_registration.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginPage_registrationMouseClicked(evt);
+        loginPage_registration.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginPage_registrationActionPerformed(evt);
             }
         });
 
         loginPage_Delete.setText("Delete Account");
-        loginPage_Delete.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginPage_DeleteMouseClicked(evt);
+        loginPage_Delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginPage_DeleteActionPerformed(evt);
             }
         });
 
         loginPage_printAccounts.setText("Print Account List");
-        loginPage_printAccounts.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginPage_printAccountsMouseClicked(evt);
+        loginPage_printAccounts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginPage_printAccountsActionPerformed(evt);
             }
         });
 
@@ -106,19 +90,17 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(73, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(loginPage_userName)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(loginPage_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(46, 46, 46)
-                            .addComponent(loginPage_Exit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(loginPage_passWord)
-                        .addComponent(loginPage_registration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(loginPage_Delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(loginPage_printAccounts, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(loginPage_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(loginPage_userName)
+                            .addComponent(loginPage_passWord)
+                            .addComponent(loginPage_registration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(loginPage_Delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(loginPage_printAccounts, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE))))
                 .addGap(73, 73, 73))
         );
         layout.setVerticalGroup(
@@ -133,9 +115,7 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loginPage_passWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(loginPage_Login)
-                    .addComponent(loginPage_Exit))
+                .addComponent(loginPage_Login)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loginPage_registration)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -149,8 +129,7 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loginPage_LoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_LoginMouseClicked
-        
+    private void loginPage_LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginPage_LoginActionPerformed
         // Check if login and pw text fields are filled 
         boolean checkNull = checkNull();
         if (!checkNull) {
@@ -158,8 +137,7 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
             String userPw = new String(loginPage_passWord.getPassword());
             String query = ("SELECT * FROM recipe_users");
             ResultSet res = null;
-            
-            
+
             // Get data from mysql
             try {
                 res = this.db.getQuerySet(query);
@@ -167,76 +145,54 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
             } catch (SQLException ex) {
                 System.out.println("Failed to get resultset from MySQL");
             }
-            
+
             // Run through resultset
-            
             boolean auth = false;
-            
+            boolean user = false;
+
             try {
-                while(res.next()) {
+                while (res.next()) {
                     //System.out.println("UserId: " +  res.getString("userID") + " User: " + res.getString("username") + "; Password: " + res.getString("password"));
-                    if(res.getString("username").trim().equals(userName) && res.getString("password").trim().equals(userPw)) {
-                        
-                        // Authenticated
-                        this.isAuthenticated = true;
-                        this.userid = Integer.parseInt(res.getString(("userID")));
-                        this.username = userName;
-                        JOptionPane.showMessageDialog(rootPane, "Login Success \nUserid: " + this.userid 
-                                + "\nUsername: " + this.username, "Success", HEIGHT);                      
-                      
-                        auth = true;                 
-                        // Go to Main JFrame
-                        MainMenu mainFrame = new MainMenu(userid, username, db);
-                        mainFrame.setVisible(true);
-                        super.dispose();
-                        
-                    } 
+                    if (res.getString("username").trim().equals(userName)) {
+                        user = true;
+                        if (res.getString("password").trim().equals(userPw)) {
+                            // Authenticated
+                            this.isAuthenticated = true;
+                            this.userid = res.getInt("userID");
+                            this.username = userName;
+                            JOptionPane.showMessageDialog(rootPane, "Login Success \nUserid: " + this.userid
+                                    + "\nUsername: " + this.username, "Success", HEIGHT);
+
+                            auth = true;
+                            // Go to Main JFrame
+                            MainMenu mainFrame = new MainMenu(userid, username, db);
+                            mainFrame.setVisible(true);
+                            dispose();
+                        }
+                    }
                 }
             } catch (SQLException ex) {
                 System.out.println("Failed to get resultset from MySQL");
             }
-            
-            if (!auth) {
-                JOptionPane.showMessageDialog(rootPane, "Authentication Failed", "Error", HEIGHT);
+            if (!user && !auth) {
+                int register = JOptionPane.showConfirmDialog(rootPane, "That username does not exist, would you like to register?", "Nonexistant User", JOptionPane.YES_NO_OPTION);
+                if (register == JOptionPane.YES_OPTION) {
+                    loginPage_registrationActionPerformed(evt);
+                }
+            } else if (!auth) {
+                JOptionPane.showMessageDialog(rootPane, "Authentication Failed, incorrect password", "Error", HEIGHT);
             }
-           
-            
-        }   
-    }//GEN-LAST:event_loginPage_LoginMouseClicked
 
-    private void loginPage_userNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_userNameMouseClicked
-  
-        // Empty text field when user clicks 
-        if(loginPage_userName.getText().equals("Enter Username") || loginPage_userName.getText().isEmpty()) {
-            loginPage_userName.setText(""); 
         }
-              
-    }//GEN-LAST:event_loginPage_userNameMouseClicked
+    }//GEN-LAST:event_loginPage_LoginActionPerformed
 
-    private void loginPage_passWordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_passWordMouseClicked
-        
-        // Empty text field when user clicks
-        // System.out.println(new String(loginPage_passWord.getPassword()));
-        String pW = new String(loginPage_passWord.getPassword());
-        if(pW.trim().equals("") || loginPage_passWord.getPassword().toString().isEmpty()) {
-            loginPage_passWord.setText("");
-        }
-        
-    }//GEN-LAST:event_loginPage_passWordMouseClicked
+    private void loginPage_registrationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginPage_registrationActionPerformed
 
-    private void loginPage_ExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_ExitMouseClicked
-        
-        System.exit(0);
-        
-    }//GEN-LAST:event_loginPage_ExitMouseClicked
-
-    private void loginPage_registrationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_registrationMouseClicked
-        
         // Check if login and pw text fields are filled 
         boolean checkNull = checkNull();
         boolean hasDuplicate;
-        if(!checkNull) {
-            
+        if (!checkNull) {
+
             // Registration code by Tim
             String username = loginPage_userName.getText();
             String password = new String(loginPage_passWord.getPassword());
@@ -245,91 +201,77 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
             //System.out.println(IQuery);//print on console
             try {
                 hasDuplicate = this.db.userInsertIntoTable(username, password);
-                if(hasDuplicate) {
+                if (hasDuplicate) {
                     System.out.println("Registration failed");
                     JOptionPane.showMessageDialog(rootPane, "The username is already taken or Server Connection has failed", "Error", HEIGHT);
                 } else {
                     System.out.println("Registration Success " + " Username: " + username + " Password: " + password);
                     JOptionPane.showMessageDialog(rootPane, "Registration Success", "Success", HEIGHT);
+                    loginPage_LoginActionPerformed(evt);
                 }
             } catch (SQLException ex) {
                 //System.out.println("Duplicate Username exits or Connection Failed");
-                
+
             }
-            
+
             try {
                 this.db.printUserTable();
             } catch (SQLException ex) {
                 Logger.getLogger(NewUserView.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-          
-        
-    }//GEN-LAST:event_loginPage_registrationMouseClicked
+    }//GEN-LAST:event_loginPage_registrationActionPerformed
 
-    private void loginPage_DeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_DeleteMouseClicked
-        
+    private void loginPage_DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginPage_DeleteActionPerformed
         // Check if login and pw text fields are filled 
         boolean checkNull = checkNull();
-        // Check if user authenticated
-        boolean auth =  false;
-        
-        
+
         String userName = loginPage_userName.getText();
         String userPw = String.valueOf(loginPage_passWord.getPassword());
-            
+
         if (!checkNull) {
-            String query = "SELECT * FROM recipe_users WHERE username = '" + userName + "' AND password='" + userPw + "'";
+            String query = "SELECT * FROM recipe_users WHERE username = '" + userName + "'";
             ResultSet res;
             try {
                 res = db.getQuerySet(query);
-                if (res.first()){
-                    int userID = res.getInt("userID");
-                    JOptionPane.showMessageDialog(rootPane, "You may delete this account now \nUserid: " + userID
-                            + "\nUsername: " + userName, "Delete Account?", HEIGHT); 
-                    auth = true;
-                    boolean deleteSuccess = this.db.deleteAccount(userName);
-                    if(deleteSuccess) {
-                        JOptionPane.showMessageDialog(rootPane, "Account deleted\nUserid: " + userID
-                            + "\nUsername: " + userName, "Deleted Account", HEIGHT); 
+                if (res.first()) {
+                    if (res.getString("password").trim().equals(userPw)) {
+                        int userID = res.getInt("userID");
+                        JOptionPane.showMessageDialog(rootPane, "You may delete this account now \nUserid: " + userID
+                                + "\nUsername: " + userName, "Delete Account?", HEIGHT);
+                        boolean deleteSuccess = this.db.deleteAccount(userName);
+                        if (deleteSuccess) {
+                            JOptionPane.showMessageDialog(rootPane, "Account deleted\nUserid: " + userID
+                                    + "\nUsername: " + userName, "Deleted Account", HEIGHT);
+                        } else {
+                            JOptionPane.showMessageDialog(rootPane, "Account was not deleted\nUser ID: " + userID, "Error", HEIGHT);
+                        }
+                        resetComponent();
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "The password provided was incorrect", "Incorrect Password", HEIGHT);
                     }
-                    else {
-                        JOptionPane.showMessageDialog(rootPane, "Account was not deleted\nUser ID: " + userID, "Error", HEIGHT);
-                    }
-                    resetComponent();
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "No account with that username exists", "No account", HEIGHT);
                 }
-                else{
-                    JOptionPane.showMessageDialog(rootPane, "No account exists with these credentials", "No Account Exists",HEIGHT);
-                }
-            }
-            catch(SQLException ex){
+            } catch (SQLException ex) {
                 System.out.println("SQL Exception: " + ex.getMessage());
             }
         }
-                // Get resultset from MySQL
-            
-            
-            if (!auth) {
-                JOptionPane.showMessageDialog(rootPane, "Authentication Failed", "Error", HEIGHT);
-            }
-      
-    }//GEN-LAST:event_loginPage_DeleteMouseClicked
+    }//GEN-LAST:event_loginPage_DeleteActionPerformed
 
-    private void loginPage_printAccountsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPage_printAccountsMouseClicked
-        
+    private void loginPage_printAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginPage_printAccountsActionPerformed
         try {
             this.db.printUserTable();
         } catch (SQLException ex) {
             System.out.println("SQL Exception: " + ex.getMessage());
         }
-    }//GEN-LAST:event_loginPage_printAccountsMouseClicked
+    }//GEN-LAST:event_loginPage_printAccountsActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JButton loginPage_Delete;
-    private javax.swing.JButton loginPage_Exit;
     private javax.swing.JButton loginPage_Login;
     private javax.swing.JPasswordField loginPage_passWord;
     private javax.swing.JButton loginPage_printAccounts;
@@ -351,8 +293,7 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
 
     @Override
     public void closeFrame() {
-        
+
         // To be updated
-        
     }
 }
