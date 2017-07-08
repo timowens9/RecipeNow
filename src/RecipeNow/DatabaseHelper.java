@@ -5,20 +5,18 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.JTextField;
 
 public class DatabaseHelper {
 
     private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static final String JDBC_URL = "jdbc:mysql://"
-            + "sql9.freemysqlhosting.net:3306/sql9181289?"
-            + "user=sql9181289&password=d5uI7fHA5U";
+            + "35.190.183.62:3306/recipenow?"
+            + "user=root&password=password&useSSL=false";
     private Connection dbConnection = null;
     private Statement statement = null;
 
     public DatabaseHelper() {
         dbConnection = getDBConnection();
-        System.out.println("Connected to Database");
 
     }
 
@@ -46,7 +44,7 @@ public class DatabaseHelper {
                 + "ingredientID INT NOT NULL AUTO_INCREMENT, "
                 + "ingredient_Name VARCHAR(50) NOT NULL, "
                 + "calories_Count INT NOT NULL, "
-                + "is_dairy VarChar(10), " // is_dariy bit ? 
+                + "is_dairy BIT, " // is_dariy bit ? 
                 + "PRIMARY KEY (ingredientID))";
 
         statement = dbConnection.createStatement();
@@ -198,6 +196,7 @@ public class DatabaseHelper {
         try {
             Class.forName(DRIVER).newInstance();
             dbConnection = DriverManager.getConnection(JDBC_URL);
+            System.out.println("Connected to Database");
             return dbConnection;
 
         } catch (Exception e) {

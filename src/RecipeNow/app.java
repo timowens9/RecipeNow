@@ -13,15 +13,15 @@ public class app {
         
 
         
-        //DatabaseHelper db = new DatabaseHelper();
+        DatabaseHelper db = new DatabaseHelper();
         
         //This would erase the db and create new table
-        //db.createUserTable();
-        
+        db.createUserTable();
+        //db.createIngredientTable();
         //Testing
         //db.insertIntoTable("TestUser2","testPass");
         //db.printTable();
-        //db.closeConnection();
+        db.closeConnection();
         
         /*
         username: test1
