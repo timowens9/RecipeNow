@@ -11,7 +11,7 @@ public class DatabaseHelper {
     private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static final String JDBC_URL = "jdbc:mysql://"
             + "35.190.183.62:3306/recipenow?"
-            + "user=root&password=password&useSSL=false";
+            + "user=eric&password=cv@zE.#jv:j8T_sA&useSSL=false";
     private Connection dbConnection = null;
     private Statement statement = null;
 
