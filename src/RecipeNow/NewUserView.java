@@ -1,5 +1,6 @@
 package RecipeNow;
 
+import java.awt.event.WindowEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -292,8 +293,19 @@ public class NewUserView extends javax.swing.JFrame implements GuiHelper {
     }
 
     @Override
-    public void closeFrame() {
-
-        // To be updated
+    public void closeFrame(){
+        //to do
+    }
+    @Override
+    protected void processWindowEvent(final WindowEvent e) {
+        super.processWindowEvent(e);
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+            try{
+                db.closeConnection();
+            }
+            catch(SQLException err){
+                System.err.println("Error: "+err.getMessage());
+            }
+        }       
     }
 }

@@ -115,8 +115,13 @@ public class MainMenu extends javax.swing.JFrame{
     @Override
     protected void processWindowEvent(final WindowEvent e) {
         super.processWindowEvent(e);
-
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+            try{
+                db.closeConnection();
+            }
+            catch(SQLException err){
+                System.err.println("Error: "+err.getMessage());
+            }
             RecipeNow.app.start = new NewUserCntl();
             dispose();
         }
