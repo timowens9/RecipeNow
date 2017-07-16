@@ -94,12 +94,15 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
             if(deleteSuccess) {
                 System.out.println("Delete Ingredient Failed");
                 new Alert(Alert.AlertType.ERROR, "Delete Ingredient Failed").showAndWait();
+                resetComponent();
             } else {
                 System.out.println("Delete Ingredient Success " + " Ingredient Name:" + newIng_ingName.getText());
                 new Alert(Alert.AlertType.INFORMATION, "Delete Ingredient Success").showAndWait();
+                resetComponent();
             }
             
         }
+        resetComponent();
     }
 
     @FXML
