@@ -47,7 +47,7 @@ public class IngredientMenu extends javax.swing.JFrame implements GuiHelper {
         newIng_deleteIng = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Add Ingredient");
+        setTitle("Ingredient Menu");
 
         newIng_addIng.setText("Add Ingredient");
         newIng_addIng.addActionListener(new java.awt.event.ActionListener() {

@@ -246,7 +246,6 @@ public class DatabaseHelper {
             return false;
         }
 
-        System.out.println(userID);
         // Delete account by userid
         String deleteStatement = "DELETE FROM recipe_users WHERE userID=" + userID;
         int deleteResult = statement.executeUpdate(deleteStatement);

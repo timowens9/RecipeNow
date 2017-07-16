@@ -8,7 +8,10 @@ package RecipeNow;
 import java.sql.SQLException;
 
 public class app {
+    
     public static NewUserCntl start;
+    public static NewUserViewFX login;
+    
      public static void main(String[] args) throws SQLException {
         
 
@@ -28,9 +31,12 @@ public class app {
         password: test1
         */
         // Start login page
-        start = new NewUserCntl();
+        login = new NewUserViewFX();
+        login.start();
+
+        //start = new NewUserCntl();
         
     }
-    
+
 
 }
