@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" fx:id="login_AnchorPane" onMouseClicked="#loginPage_LoginActionPerformed" prefHeight="308.0" prefWidth="382.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RecipeNow.NewUserViewFXController">
+   <children>
+      <Label layoutX="65.0" layoutY="61.0" text="Username" />
+      <TextField fx:id="loginPage_userName" layoutX="65.0" layoutY="76.0" prefHeight="23.0" prefWidth="257.0" />
+      <Label layoutX="65.0" layoutY="99.0" text="Password" />
+      <Button fx:id="loginPage_Login" layoutX="65.0" layoutY="154.0" mnemonicParsing="false" onMouseClicked="#loginPage_LoginActionPerformed" prefHeight="23.0" prefWidth="257.0" text="Login" />
+      <Button fx:id="loginPage_registration" layoutX="65.0" layoutY="184.0" mnemonicParsing="false" onMouseClicked="#loginPage_registrationActionPerformed" prefHeight="23.0" prefWidth="257.0" text="Register" />
+      <Button fx:id="loginPage_Delete" layoutX="65.0" layoutY="213.0" mnemonicParsing="false" onMouseClicked="#loginPage_DeleteActionPerformed" prefHeight="23.0" prefWidth="257.0" text="Delete Account" />
+      <Button fx:id="loginPage_printAccounts" layoutX="65.0" layoutY="243.0" mnemonicParsing="false" onMouseClicked="#loginPage_printAccounts" prefHeight="23.0" prefWidth="257.0" text="Print Account List" />
+      <PasswordField fx:id="loginPage_passWord" layoutX="65.0" layoutY="114.0" prefHeight="23.0" prefWidth="257.0" />
+   </children>
+</AnchorPane>
