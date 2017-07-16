@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -26,20 +28,23 @@ public class MainMenuFXController implements Initializable {
     private DatabaseHelper db;
     
     @FXML
-    private Button mainMenu_printIngList;
+    private AnchorPane mainMenu;
     @FXML
-    private AnchorPane mainMenu_addIng;
-
+    private Button mainMenu_printIngListButton;
+    @FXML
+    private Button mainMenu_ingButton;
+    @FXML
+    private Button mainMenu_logoutButton;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.db = NewUserViewFXController.db;
+        db = app.db;
     }    
 
     @FXML
-    private void mainMenu_printIngListMouseClicked(MouseEvent event) {
+    private void mainMenu_printIngListAction(ActionEvent event) {
         try {
             db.printIngredientTable();
         } catch (SQLException ex) {
@@ -48,9 +53,28 @@ public class MainMenuFXController implements Initializable {
     }
 
     @FXML
-    private void mainMenu_addIngMouseClicked(MouseEvent event) throws IOException {
-        IngredientMenuFX ing = new IngredientMenuFX();
-        ing.start(new Stage());
+    private void mainMenu_addIngAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("IngredientMenuFXML.fxml"));
+        AnchorPane ingMenu = (AnchorPane) loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(ingMenu));
+        stage.setTitle("Ingredient Menu");
+        stage.show();
+    }
+    
+    @FXML 
+    private void mainMenu_logoutAction(ActionEvent event) throws IOException {
+        app.base.setScene(app.login);
+        app.base.setTitle("Login");
+    }
+    @FXML
+    private void stop(){
+        try{
+            db.closeConnection();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
     }
     
 }

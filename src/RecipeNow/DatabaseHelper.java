@@ -53,20 +53,15 @@ public class DatabaseHelper {
     }
 
     public boolean ingredientInsertIntoTable(String ingredName, int calories, int dairy) throws SQLException {
-
+        
         String insertTableSQL = "INSERT INTO ingredient"
                 + "(ingredient_Name, calories_Count, is_dairy) " + "VALUES"
                 + "('" + ingredName + "', '" + calories + "', " + dairy + ")";
-        /*
-        String insertTableSQL = "INSERT INTO ingredient"
-                + "(ingredient_Name, calories_Count, is_dairy) " + "VALUES"
-                + "('" + ingredName + "', '" + calories + "', '" + dairy + "')";
-        */
-        //System.out.println(insertTableSQL);
+                
+        
 
         boolean hasDuplicate = checkDuplicate("ingredient", "ingredient_Name", ingredName);
         if (!hasDuplicate) {
-            dbConnection = getDBConnection();
             statement = dbConnection.createStatement();
 
             System.out.println(insertTableSQL);
@@ -93,7 +88,6 @@ public class DatabaseHelper {
                 + " WHERE ingredient_Name = " + "'" + ingredName + "';";
         
         System.out.println(insertEditTableSQL);
-        dbConnection = getDBConnection();
         statement = dbConnection.createStatement();
         // execute insert SQL stetement
         statement.executeUpdate(insertEditTableSQL);
@@ -124,7 +118,6 @@ public class DatabaseHelper {
         boolean hasDuplicate = checkDuplicate("recipe_users", "username", userName);
 
         if (!hasDuplicate) {
-            dbConnection = getDBConnection();
             statement = dbConnection.createStatement();
 
             System.out.println(insertTableSQL);
@@ -219,7 +212,7 @@ public class DatabaseHelper {
     public boolean checkDuplicate(String tableName, String columnName, String target) throws SQLException {
 
         boolean hasDuplicate = false;
-        statement = this.dbConnection.createStatement();
+        statement = dbConnection.createStatement();
         ResultSet res = statement.executeQuery("SELECT * FROM " + tableName);
 
         while (res.next()) {

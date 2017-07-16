@@ -6,9 +6,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" fx:id="mainMenu_addIng" onMouseClicked="#mainMenu_addIngMouseClicked" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RecipeNow.MainMenuFXController">
+<AnchorPane id="AnchorPane" fx:id="mainMenu" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RecipeNow.MainMenuFXController">
    <children>
-      <Button fx:id="mainMenu_printIngList" layoutX="429.0" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#mainMenu_printIngListMouseClicked" text="Print Ingredient List" />
-      <Button layoutX="429.0" layoutY="76.0" mnemonicParsing="false" onMouseClicked="#mainMenu_addIngMouseClicked" prefHeight="23.0" prefWidth="131.0" text="Ingredient Menu" />
+      <Button fx:id="mainMenu_printIngListButton" layoutX="429.0" layoutY="42.0" mnemonicParsing="false" onAction="#mainMenu_printIngListAction" text="Print Ingredient List" />
+      <Button fx:id="mainMenu_ingButton" layoutX="429.0" layoutY="76.0" mnemonicParsing="false" onAction="#mainMenu_addIngAction" prefHeight="23.0" prefWidth="131.0" text="Ingredient Menu" />
+      <Button fx:id="mainMenu_logoutButton" layoutX="429.0" layoutY="200.0" mnemonicParsing="false" onAction="#mainMenu_logoutAction" text="Logout" />
    </children>
 </AnchorPane>

@@ -6,13 +6,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="177.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RecipeNow.IngredientMenuFXController">
-   <children>
-      <TextField fx:id="newIng_ingName" layoutX="14.0" layoutY="14.0" onMouseClicked="#newIng_ingNameMouseClicked" prefHeight="23.0" prefWidth="266.0" text="Enter Ingredient Name" />
-      <TextField fx:id="newIng_ingCal" layoutX="14.0" layoutY="45.0" onMouseClicked="#newIng_ingCalMouseClicked" prefHeight="23.0" prefWidth="266.0" text="Enter Ingredient Calorie" />
-      <CheckBox fx:id="newIng_isDairy" layoutX="14.0" layoutY="73.0" mnemonicParsing="false" text="Dairy" />
-      <Button fx:id="newIng_addIng" layoutX="13.0" layoutY="96.0" mnemonicParsing="false" onMouseClicked="#newIng_addIngActionPerformed" prefHeight="23.0" prefWidth="266.0" text="Add Ingredient" />
-      <Button fx:id="newIng_editIng" layoutX="12.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#newIng_editIngActionPerformed" prefHeight="23.0" prefWidth="266.0" text="Edit Ingredient" />
-      <Button fx:id="newIng_deleteIng" layoutX="12.0" layoutY="152.0" mnemonicParsing="false" onMouseClicked="#newIng_deleteIngActionPerformed" prefHeight="23.0" prefWidth="266.0" text="Delete Ingredient" />
-   </children>
+<AnchorPane id="AnchorPane" fx:id="IngMenu" prefHeight="200.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RecipeNow.IngredientMenuFXController">
+    <children>
+        <TextField fx:id="newIng_ingName" layoutX="14.0" layoutY="14.0" prefHeight="23.0" prefWidth="266.0" text="Enter Ingredient Name" />
+        <TextField fx:id="newIng_ingCal" layoutX="14.0" layoutY="45.0" prefHeight="23.0" prefWidth="266.0" text="Enter Ingredient Calorie" />
+        <CheckBox fx:id="newIng_isDairy" layoutX="14.0" layoutY="73.0" mnemonicParsing="false" text="Dairy" />
+        <Button fx:id="newIng_addIng" layoutX="13.0" layoutY="96.0" mnemonicParsing="false" onAction="#newIng_addIngActionPerformed" prefHeight="23.0" prefWidth="266.0" text="Add Ingredient" />
+        <Button fx:id="newIng_editIng" layoutX="12.0" layoutY="125.0" mnemonicParsing="false" onAction="#newIng_editIngActionPerformed" prefHeight="23.0" prefWidth="266.0" text="Edit Ingredient" />
+        <Button fx:id="newIng_deleteIng" layoutX="12.0" layoutY="152.0" mnemonicParsing="false" onAction="#newIng_deleteIngActionPerformed" prefHeight="23.0" prefWidth="266.0" text="Delete Ingredient" />
+    </children>
 </AnchorPane>

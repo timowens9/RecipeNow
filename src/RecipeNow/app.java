@@ -6,37 +6,45 @@
 package RecipeNow;
 
 import java.sql.SQLException;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class app {
+public class app extends Application{
     
-    public static NewUserCntl start;
-    public static NewUserViewFX login;
+    public static Stage base;
+    public static Scene login;
+    public static DatabaseHelper db;
     
-     public static void main(String[] args) throws SQLException {
-        
-
-        
-        //DatabaseHelper db = new DatabaseHelper();
-        
-        //This would erase the db and create new table
-        //db.createUserTable();
-        //db.createIngredientTable();
-        //Testing
-        //db.insertIntoTable("TestUser2","testPass");
-        //db.printTable();
-        //db.closeConnection();
-        
-        /*
-        username: test1
-        password: test1
-        */
-        // Start login page
-        login = new NewUserViewFX();
-        login.start();
-
-        //start = new NewUserCntl();
+    
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        db = new DatabaseHelper();
+        base = primaryStage;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("NewUserViewFXML.fxml"));
+        Parent root = loader.load();
+        base.setTitle("Login");
+        login = new Scene(root);
+        base.setScene(login);
+        base.show();    
+    }
+    
+     public static void main(String[] args)  {
+         launch();
         
     }
+    @Override
+    public void stop(){
+        try{
+            db.closeConnection();
+        }
+        catch(SQLException e){
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+
 
 
 }

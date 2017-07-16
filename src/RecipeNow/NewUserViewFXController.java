@@ -19,7 +19,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -58,20 +60,21 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.db = new DatabaseHelper();
+        db = app.db;
     }
-
+    
+    
     @FXML
-    private void loginPage_printAccounts(MouseEvent event) {
+    private void loginPage_printAccounts(ActionEvent event) {
         try {
-            this.db.printUserTable();
+            db.printUserTable();
         } catch (SQLException ex) {
             System.out.println("SQL Exception: " + ex.getMessage());
         }
     }
 
     @FXML
-    private void loginPage_DeleteActionPerformed(MouseEvent event) {
+    private void loginPage_DeleteActionPerformed(ActionEvent event) {
         // Check if login and pw text fields are filled 
         boolean checkNull = checkNull();
 
@@ -91,7 +94,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                         
                         new Alert(Alert.AlertType.INFORMATION, "You may delete this account now \nUserid: " + userID + 
                                 "\nUsername:" + userName).showAndWait();
-                        boolean deleteSuccess = this.db.deleteAccount(userName);
+                        boolean deleteSuccess = db.deleteAccount(userName);
                         if (deleteSuccess) {
                             new Alert(Alert.AlertType.INFORMATION, "Account deleted\nUserid: " + userID
                                 + "\nUsername: " + userName).showAndWait();
@@ -116,7 +119,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
 
 
     @FXML
-    private void loginPage_registrationActionPerformed(MouseEvent event) {
+    private void loginPage_registrationActionPerformed(ActionEvent event) {
          // Check if login and pw text fields are filled 
         boolean checkNull = checkNull();
         boolean hasDuplicate;
@@ -129,7 +132,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
             //String IQuery = "INSERT INTO `recipe_users`(`username`,`password`) VALUES('" + username + "', '" + password + "')";
             //System.out.println(IQuery);//print on console
             try {
-                hasDuplicate = this.db.userInsertIntoTable(username, password);
+                hasDuplicate = db.userInsertIntoTable(username, password);
                 if (hasDuplicate) {
                     System.out.println("Registration failed");
                     new Alert(Alert.AlertType.ERROR, "The username is already taken or Server Connection has failed").showAndWait();
@@ -144,14 +147,14 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                 //System.out.println("Duplicate Username exits or Connection Failed");
             }
             try {
-                this.db.printUserTable();
+                db.printUserTable();
             } catch (SQLException ex) {
                 System.out.println("SQL Exception: " + ex.getMessage());
             }
         }
     }
     @FXML
-    private void loginPage_LoginActionPerformed(MouseEvent event) throws IOException {
+    private void loginPage_LoginActionPerformed(ActionEvent event) throws IOException {
         // Check if login and pw text fields are filled 
         boolean checkNull = checkNull();
         if (!checkNull) {
@@ -162,7 +165,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
 
             // Get data from mysql
             try {
-                res = this.db.getQuerySet(query);
+                res = db.getQuerySet(query);
                 // Get resultset from MySQL
             } catch (SQLException ex) {
                 System.out.println("Failed to get resultset from MySQL");
@@ -187,9 +190,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                             auth = true;
                             resetComponent();
                             // Go to Main Menu
-                            MainMenuFX main = new MainMenuFX();
-                            main.start(new Stage());
-                            NewUserViewFX.login.hide();
+                            goToMainMenu();
                             
                         }
                     }
@@ -229,11 +230,23 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
 
     @Override
     public void closeFrame() {
-
-        // To be updated
+        try{
+            db.closeConnection();
+        }
+        catch(SQLException e){
+            System.err.println("Error: "+e.getMessage());
+            
+        }
     }
 
-    
+    private void goToMainMenu() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainMenuFXML.fxml"));
+        AnchorPane mainMenu = (AnchorPane) loader.load();
+        Stage stage = app.base;
+        stage.setScene(new Scene(mainMenu));
+        stage.setTitle("Main Menu");
+        
+    }
 
     
 }
