@@ -11,5 +11,7 @@
       <Button fx:id="mainMenu_printIngListButton" layoutX="429.0" layoutY="42.0" mnemonicParsing="false" onAction="#mainMenu_printIngListAction" text="Print Ingredient List" />
       <Button fx:id="mainMenu_ingButton" layoutX="429.0" layoutY="76.0" mnemonicParsing="false" onAction="#mainMenu_addIngAction" prefHeight="23.0" prefWidth="131.0" text="Ingredient Menu" />
       <Button fx:id="mainMenu_logoutButton" layoutX="429.0" layoutY="200.0" mnemonicParsing="false" onAction="#mainMenu_logoutAction" text="Logout" />
+      <Button fx:id="mainMenu_printRecipeListButton" layoutX="429.0" layoutY="110.0" mnemonicParsing="false" onAction="#mainMenu_printRecipeListAction" prefHeight="23.0" prefWidth="131.0" text="Print Recipe List" />
+      <Button fx:id="mainMenu_recipeButton" layoutX="429.0" layoutY="142.0" mnemonicParsing="false" onAction="#mainMenu_addRecipeAction" prefHeight="23.0" prefWidth="131.0" text="Recipe Menu" />
    </children>
 </AnchorPane>
