@@ -13,16 +13,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -127,19 +121,19 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
         if (!checkNull) {
 
             // Registration code by Tim
-            String username = loginPage_userName.getText();
-            String password = new String(loginPage_passWord.getText());
+            String userName = loginPage_userName.getText();
+            String passWord = loginPage_passWord.getText();
             //System.out.println(password);
             //String IQuery = "INSERT INTO `recipe_users`(`username`,`password`) VALUES('" + username + "', '" + password + "')";
             //System.out.println(IQuery);//print on console
             try {
-                hasDuplicate = db.userInsertIntoTable(username, password);
+                hasDuplicate = db.userInsertIntoTable(userName, passWord);
                 if (hasDuplicate) {
                     System.out.println("Registration failed");
                     new Alert(Alert.AlertType.ERROR, "The username is already taken or Server Connection has failed").showAndWait();
                     resetComponent();
                 } else {
-                    System.out.println("Registration Success " + " Username: " + username + " Password: " + password);
+                    System.out.println("Registration Success " + " Username: " + userName + " Password: " + passWord);
                     new Alert(Alert.AlertType.INFORMATION, "Registration Success").showAndWait();
                     //loginPage_LoginActionPerformed(evt);
                     resetComponent();
@@ -160,7 +154,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
         boolean checkNull = checkNull();
         if (!checkNull) {
             String userName = loginPage_userName.getText();
-            String userPw = new String(loginPage_passWord.getText());
+            String userPw = loginPage_passWord.getText();
             String query = ("SELECT * FROM recipe_users");
             ResultSet res = null;
 
@@ -186,8 +180,9 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                             this.isAuthenticated = true;
                             this.userid = res.getInt("userID");
                             this.username = userName;
-                            new Alert(Alert.AlertType.INFORMATION, "Login Success \nUserid: " + this.userid
-                                    + "\nUsername: " + this.username).showAndWait();
+                            Alert success = new Alert(Alert.AlertType.INFORMATION, "Login Success\nUserid:" + userid + "\nUsername: " +username);
+                            success.setHeaderText("Login Successful");
+                            success.showAndWait();
                             auth = true;
                             resetComponent();
                             // Go to Main Menu
@@ -200,7 +195,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                 System.out.println("Failed to get resultset from MySQL");
             }
             if (!user && !auth) {
-                Alert alert = new Alert(AlertType.CONFIRMATION);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Error");
                 alert.setHeaderText("Account Not Found");
                 alert.setContentText("That username does not exist, would you like to register?");

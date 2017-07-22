@@ -42,15 +42,6 @@ public class MainMenuFXController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         db = app.db;
     }    
-
-    @FXML
-    private void mainMenu_printIngListAction(ActionEvent event) {
-        try {
-            db.printIngredientTable();
-        } catch (SQLException ex) {
-            System.out.println("SQL Exception: " + ex.getMessage());
-        }
-    }
     
     @FXML
     private void mainMenu_printRecipeListAction(ActionEvent event) {
@@ -79,14 +70,14 @@ public class MainMenuFXController implements Initializable {
         AnchorPane ingMenu = (AnchorPane) loader.load();
         Stage stage = new Stage();
         stage.setScene(new Scene(ingMenu));
-        stage.setTitle("Ingredient Menu");
+        stage.setTitle("RecipeNow - Ingredient Menu");
         stage.show();
     }
     
     @FXML 
     private void mainMenu_logoutAction(ActionEvent event) throws IOException {
         app.base.setScene(app.login);
-        app.base.setTitle("Login");
+        app.base.setTitle("RecipeNow - Login");
     }
     private void stop(){
         try{
