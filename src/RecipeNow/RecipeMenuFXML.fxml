@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="614.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="RecipeNow.RecipeMenuFXController">
+   <children>
+      <TextField fx:id="newRecipe_recipeName" layoutX="24.0" layoutY="24.0" prefHeight="23.0" prefWidth="567.0" text="Enter Recipe Name" />
+      <TextArea fx:id="newRecipe_recipeInstruction" layoutX="24.0" layoutY="47.0" prefHeight="179.0" prefWidth="567.0" text="Enter Instruction" />
+      <Button fx:id="newRecipe_addRecipe" layoutX="24.0" layoutY="294.0" mnemonicParsing="false" onAction="#newRecipe_addRecipeActionPerformed" prefHeight="43.0" prefWidth="567.0" text="Add Recipe" />
+      <TextField fx:id="newRecipe_recipeIngredients" layoutX="24.0" layoutY="225.0" prefHeight="23.0" prefWidth="567.0" text="Enter Ingredient names ex) Apple,Orange,Banana" />
+      <TextField fx:id="newRecipe_recipeRating" layoutX="24.0" layoutY="248.0" prefHeight="23.0" prefWidth="567.0" text="Enter Rating ex) 0~5" />
+      <TextField fx:id="newRecipe_recipeChefId" layoutX="24.0" layoutY="271.0" prefHeight="23.0" prefWidth="567.0" text="Enter Chef ID" />
+      <Button fx:id="newRecipe_deleteRecipe" layoutX="24.0" layoutY="337.0" mnemonicParsing="false" onAction="#newRecipe_deleteRecipeActionPerformed" prefHeight="43.0" prefWidth="567.0" text="Delete Recipe" />
+   </children>
+</AnchorPane>
