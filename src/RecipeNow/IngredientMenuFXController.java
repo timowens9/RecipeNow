@@ -10,10 +10,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 
 /**
@@ -23,15 +20,12 @@ import javafx.event.ActionEvent;
  */
 public class IngredientMenuFXController implements Initializable, GuiHelper {
 
-    @FXML
-    private TextField newIng_ingName;
-    @FXML
-    private TextField newIng_ingCal;
-    @FXML
-    private CheckBox newIng_isDairy;
+
     @FXML
     private Button newIng_deleteIng;
-
+    @FXML
+    private ListView newIng_ingredientList;
+    
     private DatabaseHelper db;
     @FXML
     private Button newIng_addIng;

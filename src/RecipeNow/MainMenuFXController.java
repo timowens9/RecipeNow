@@ -14,7 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -28,13 +28,9 @@ public class MainMenuFXController implements Initializable {
     private DatabaseHelper db;
     
     @FXML
-    private AnchorPane mainMenu;
-    @FXML
-    private Button mainMenu_printIngListButton;
-    @FXML
     private Button mainMenu_ingButton;
     @FXML
-    private Button mainMenu_logoutButton;
+    private MenuItem mainMenu_logoutMenuItem;
     /**
      * Initializes the controller class.
      */

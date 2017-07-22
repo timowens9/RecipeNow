@@ -25,7 +25,7 @@ public class app extends Application{
         base = primaryStage;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("NewUserViewFXML.fxml"));
         Parent root = loader.load();
-        base.setTitle("Login");
+        base.setTitle("RecipeNow - Login");
         login = new Scene(root);
         base.setScene(login);
         base.show();    

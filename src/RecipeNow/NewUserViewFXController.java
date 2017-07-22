@@ -22,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -244,7 +245,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
         AnchorPane mainMenu = (AnchorPane) loader.load();
         Stage stage = app.base;
         stage.setScene(new Scene(mainMenu));
-        stage.setTitle("Main Menu");
+        stage.setTitle("RecipeNow - Main Menu");
         
     }
 
