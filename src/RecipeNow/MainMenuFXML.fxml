@@ -10,7 +10,6 @@
 
 <AnchorPane id="AnchorPane" fx:id="mainMenu" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RecipeNow.MainMenuFXController">
    <children>
-<<<<<<< HEAD
       <MenuBar prefHeight="25.0" prefWidth="569.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
@@ -46,12 +45,5 @@
           </Tab>
         </tabs>
       </TabPane>
-=======
-      <Button fx:id="mainMenu_printIngListButton" layoutX="429.0" layoutY="42.0" mnemonicParsing="false" onAction="#mainMenu_printIngListAction" text="Print Ingredient List" />
-      <Button fx:id="mainMenu_ingButton" layoutX="429.0" layoutY="76.0" mnemonicParsing="false" onAction="#mainMenu_addIngAction" prefHeight="23.0" prefWidth="131.0" text="Ingredient Menu" />
-      <Button fx:id="mainMenu_logoutButton" layoutX="429.0" layoutY="200.0" mnemonicParsing="false" onAction="#mainMenu_logoutAction" text="Logout" />
-      <Button fx:id="mainMenu_printRecipeListButton" layoutX="429.0" layoutY="110.0" mnemonicParsing="false" onAction="#mainMenu_printRecipeListAction" prefHeight="23.0" prefWidth="131.0" text="Print Recipe List" />
-      <Button fx:id="mainMenu_recipeButton" layoutX="429.0" layoutY="142.0" mnemonicParsing="false" onAction="#mainMenu_addRecipeAction" prefHeight="23.0" prefWidth="131.0" text="Recipe Menu" />
->>>>>>> ee3842f51e24dcd79443ede81fa0da0d7533cc09
    </children>
 </AnchorPane>

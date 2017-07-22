@@ -30,15 +30,11 @@ public class MainMenuFXController implements Initializable {
     @FXML
     private Button mainMenu_ingButton;
     @FXML
-<<<<<<< HEAD
     private MenuItem mainMenu_logoutMenuItem;
-=======
-    private Button mainMenu_logoutButton;
     @FXML
     private Button mainMenu_printRecipeListButton;
     @FXML
     private Button mainMenu_recipeButton;
->>>>>>> ee3842f51e24dcd79443ede81fa0da0d7533cc09
     /**
      * Initializes the controller class.
      */
