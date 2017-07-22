@@ -35,6 +35,10 @@ public class MainMenuFXController implements Initializable {
     private Button mainMenu_ingButton;
     @FXML
     private Button mainMenu_logoutButton;
+    @FXML
+    private Button mainMenu_printRecipeListButton;
+    @FXML
+    private Button mainMenu_recipeButton;
     /**
      * Initializes the controller class.
      */
@@ -51,10 +55,31 @@ public class MainMenuFXController implements Initializable {
             System.out.println("SQL Exception: " + ex.getMessage());
         }
     }
+    
+    @FXML
+    private void mainMenu_printRecipeListAction(ActionEvent event) {
+        try {
+            db.printRecipeTable();
+        } catch (SQLException ex) {
+            System.out.println("SQL Exception: " + ex.getMessage());
+        }
+    }
 
     @FXML
+    // Ingredient Menu 
     private void mainMenu_addIngAction(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("IngredientMenuFXML.fxml"));
+        AnchorPane ingMenu = (AnchorPane) loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(ingMenu));
+        stage.setTitle("Recipe Menu");
+        stage.show();
+    }
+    
+    @FXML
+    // Recipe Menu
+    private void mainMenu_addRecipeAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("RecipeMenuFXML.fxml"));
         AnchorPane ingMenu = (AnchorPane) loader.load();
         Stage stage = new Stage();
         stage.setScene(new Scene(ingMenu));
@@ -67,7 +92,6 @@ public class MainMenuFXController implements Initializable {
         app.base.setScene(app.login);
         app.base.setTitle("Login");
     }
-    @FXML
     private void stop(){
         try{
             db.closeConnection();
