@@ -14,7 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -28,13 +28,9 @@ public class MainMenuFXController implements Initializable {
     private DatabaseHelper db;
     
     @FXML
-    private AnchorPane mainMenu;
-    @FXML
-    private Button mainMenu_printIngListButton;
-    @FXML
     private Button mainMenu_ingButton;
     @FXML
-    private Button mainMenu_logoutButton;
+    private MenuItem mainMenu_logoutMenuItem;
     @FXML
     private Button mainMenu_printRecipeListButton;
     @FXML
@@ -46,15 +42,6 @@ public class MainMenuFXController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         db = app.db;
     }    
-
-    @FXML
-    private void mainMenu_printIngListAction(ActionEvent event) {
-        try {
-            db.printIngredientTable();
-        } catch (SQLException ex) {
-            System.out.println("SQL Exception: " + ex.getMessage());
-        }
-    }
     
     @FXML
     private void mainMenu_printRecipeListAction(ActionEvent event) {
@@ -83,14 +70,14 @@ public class MainMenuFXController implements Initializable {
         AnchorPane ingMenu = (AnchorPane) loader.load();
         Stage stage = new Stage();
         stage.setScene(new Scene(ingMenu));
-        stage.setTitle("Ingredient Menu");
+        stage.setTitle("RecipeNow - Ingredient Menu");
         stage.show();
     }
     
     @FXML 
     private void mainMenu_logoutAction(ActionEvent event) throws IOException {
         app.base.setScene(app.login);
-        app.base.setTitle("Login");
+        app.base.setTitle("RecipeNow - Login");
     }
     private void stop(){
         try{
