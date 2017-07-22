@@ -170,7 +170,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                 // Get resultset from MySQL
             } catch (SQLException ex) {
                 System.out.println("Failed to get resultset from MySQL");
-            }
+            }          
 
             // Run through resultset
             boolean auth = false;
@@ -213,6 +213,9 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                 resetComponent();
             }
 
+        } else {
+            // Id or Pw text fields are null
+            new Alert(Alert.AlertType.ERROR, "Username and/or Password field is emtpy").showAndWait();
         }
     }
     

@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * FXML Controller class
@@ -31,6 +32,8 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
     private Button newIng_addIng;
     @FXML
     private Button newIng_editIng;
+    @FXML
+    private AnchorPane IngMenu;
     /**
      * Initializes the controller class.
      */
