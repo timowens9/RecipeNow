@@ -236,7 +236,22 @@ public class DatabaseHelper {
         while (res.next()) {
             System.out.println("RecipeId: " + res.getString("recipeID") + " Recipe Name: " + res.getString("recipe_Name"));
             System.out.println("Recipe Description: " + res.getString("recipe_Description"));
-            System.out.println("Recipe Ingredients: " + res.getString("recipe_Ingredients"));
+            
+            String[] recipeSplit = res.getString("recipe_Ingredients").split(",");
+            String ingredientNames = "";
+            for(int i = 0; i < recipeSplit.length; i++) {
+                String query = "SELECT ingredient_name FROM ingredient "
+                + "WHERE ingredientID = " + "'" + recipeSplit[i] + "';";
+                ResultSet resultSet = getQuerySet(query);
+                if (resultSet.first()) {
+                    ingredientNames += resultSet.getString("ingredient_name") + ", ";
+                }
+            }
+            
+            // Remove last comma
+            ingredientNames = ingredientNames.substring(0, ingredientNames.length()-2);
+            
+            System.out.println("Recipe Ingredients: " + ingredientNames);
             System.out.println("Recipe ChedId: " + res.getString("recipe_ChefID") + " Recipe Number of Times Cooked: " + res.getString("recipe_numCooked"));
             System.out.println("Recipe Rating: " + res.getString("recipe_rating"));
             System.out.println("Recipe Calroie: " + res.getString("recipe_Calorie"));
