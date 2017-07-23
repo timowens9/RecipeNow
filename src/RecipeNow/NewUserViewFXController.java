@@ -27,6 +27,34 @@ import javafx.stage.Stage;
  */
 public class NewUserViewFXController  implements Initializable, GuiHelper {
 
+    /**
+     * @return the userid
+     */
+    public int getUserid() {
+        return userid;
+    }
+
+    /**
+     * @param userid the userid to set
+     */
+    public void setUserid(int userid) {
+        this.userid = userid;
+    }
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     
     @FXML
     private Button loginPage_printAccounts;
@@ -61,11 +89,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
     
     @FXML
     private void loginPage_printAccounts(ActionEvent event) {
-        try {
-            db.printUserTable();
-        } catch (SQLException ex) {
-            System.out.println("SQL Exception: " + ex.getMessage());
-        }
+        db.printUserTable();
     }
 
     @FXML
@@ -126,26 +150,18 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
             //System.out.println(password);
             //String IQuery = "INSERT INTO `recipe_users`(`username`,`password`) VALUES('" + username + "', '" + password + "')";
             //System.out.println(IQuery);//print on console
-            try {
-                hasDuplicate = db.userInsertIntoTable(userName, passWord);
-                if (hasDuplicate) {
-                    System.out.println("Registration failed");
-                    new Alert(Alert.AlertType.ERROR, "The username is already taken or Server Connection has failed").showAndWait();
-                    resetComponent();
-                } else {
-                    System.out.println("Registration Success " + " Username: " + userName + " Password: " + passWord);
-                    new Alert(Alert.AlertType.INFORMATION, "Registration Success").showAndWait();
-                    //loginPage_LoginActionPerformed(evt);
-                    resetComponent();
-                }
-            } catch (SQLException ex) {
-                //System.out.println("Duplicate Username exits or Connection Failed");
+            hasDuplicate = db.userInsertIntoTable(userName, passWord);
+            if (hasDuplicate) {
+                System.out.println("Registration failed");
+                new Alert(Alert.AlertType.ERROR, "The username is already taken or Server Connection has failed").showAndWait();
+                resetComponent();
+            } else {
+                System.out.println("Registration Success " + " Username: " + userName + " Password: " + passWord);
+                new Alert(Alert.AlertType.INFORMATION, "Registration Success").showAndWait();
+                //loginPage_LoginActionPerformed(evt);
+                resetComponent();
             }
-            try {
-                db.printUserTable();
-            } catch (SQLException ex) {
-                System.out.println("SQL Exception: " + ex.getMessage());
-            }
+            db.printUserTable();
         }
     }
     @FXML
@@ -156,15 +172,10 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
             String userName = loginPage_userName.getText();
             String userPw = loginPage_passWord.getText();
             String query = ("SELECT * FROM recipe_users");
-            ResultSet res = null;
+            ResultSet res;
 
             // Get data from mysql
-            try {
-                res = db.getQuerySet(query);
-                // Get resultset from MySQL
-            } catch (SQLException ex) {
-                System.out.println("Failed to get resultset from MySQL");
-            }          
+            res = db.getQuerySet(query);
 
             // Run through resultset
             boolean auth = false;
@@ -178,9 +189,9 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                         if (res.getString("password").trim().equals(userPw)) {
                             // Authenticated
                             this.isAuthenticated = true;
-                            this.userid = res.getInt("userID");
-                            this.username = userName;
-                            Alert success = new Alert(Alert.AlertType.INFORMATION, "Login Success\nUserid:" + userid + "\nUsername: " +username);
+                            this.setUserid(res.getInt("userID"));
+                            this.setUsername(userName);
+                            Alert success = new Alert(Alert.AlertType.INFORMATION, "Login Success\nUserid:" + getUserid() + "\nUsername: " +getUsername());
                             success.setHeaderText("Login Successful");
                             success.showAndWait();
                             auth = true;
@@ -229,13 +240,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
 
     @Override
     public void closeFrame() {
-        try{
-            db.closeConnection();
-        }
-        catch(SQLException e){
-            System.err.println("Error: "+e.getMessage());
-            
-        }
+        db.closeConnection();
     }
 
     private void goToMainMenu() throws IOException{

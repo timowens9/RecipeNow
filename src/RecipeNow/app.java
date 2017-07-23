@@ -16,6 +16,7 @@ public class app extends Application{
     
     public static Stage base;
     public static Scene login;
+    public static NewUserViewFXController loginCntl;
     public static DatabaseHelper db;
     
     
@@ -25,6 +26,7 @@ public class app extends Application{
         base = primaryStage;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("NewUserViewFXML.fxml"));
         Parent root = loader.load();
+        loginCntl = loader.getController();
         base.setTitle("RecipeNow - Login");
         login = new Scene(root);
         base.setScene(login);
@@ -37,12 +39,7 @@ public class app extends Application{
     }
     @Override
     public void stop(){
-        try{
-            db.closeConnection();
-        }
-        catch(SQLException e){
-            System.err.println("Error: " + e.getMessage());
-        }
+        db.closeConnection();
     }
 
 
