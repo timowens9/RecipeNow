@@ -30,11 +30,11 @@ public class MainMenuFXController implements Initializable {
     @FXML
     private Button mainMenu_ingButton;
     @FXML
+    private Button mainMenu_recipeButton;
+    @FXML
     private MenuItem mainMenu_logoutMenuItem;
     @FXML
     private Button mainMenu_printRecipeListButton;
-    @FXML
-    private Button mainMenu_recipeButton;
     /**
      * Initializes the controller class.
      */
@@ -43,14 +43,6 @@ public class MainMenuFXController implements Initializable {
         db = app.db;
     }    
     
-    @FXML
-    private void mainMenu_printRecipeListAction(ActionEvent event) {
-        try {
-            db.printRecipeTable();
-        } catch (SQLException ex) {
-            System.out.println("SQL Exception: " + ex.getMessage());
-        }
-    }
 
     @FXML
     // Ingredient Menu 
@@ -59,7 +51,7 @@ public class MainMenuFXController implements Initializable {
         AnchorPane ingMenu = (AnchorPane) loader.load();
         Stage stage = new Stage();
         stage.setScene(new Scene(ingMenu));
-        stage.setTitle("Recipe Menu");
+        stage.setTitle("RecipeNow - Ingredient Menu");
         stage.show();
     }
     
@@ -67,10 +59,10 @@ public class MainMenuFXController implements Initializable {
     // Recipe Menu
     private void mainMenu_addRecipeAction(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("RecipeMenuFXML.fxml"));
-        AnchorPane ingMenu = (AnchorPane) loader.load();
+        AnchorPane recipeMenu = (AnchorPane) loader.load();
         Stage stage = new Stage();
-        stage.setScene(new Scene(ingMenu));
-        stage.setTitle("RecipeNow - Ingredient Menu");
+        stage.setScene(new Scene(recipeMenu));
+        stage.setTitle("RecipeNow - Recipe Menu");
         stage.show();
     }
     
@@ -80,12 +72,7 @@ public class MainMenuFXController implements Initializable {
         app.base.setTitle("RecipeNow - Login");
     }
     private void stop(){
-        try{
-            db.closeConnection();
-        }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-        }
+        db.closeConnection();
     }
     
 }

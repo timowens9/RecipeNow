@@ -2,6 +2,7 @@ package RecipeNow;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,6 +15,7 @@ public class DatabaseHelper {
             + "35.190.183.62:3306/recipenow?"
             + "user=eric&password=cv@zE.#jv:j8T_sA&useSSL=false";
     private Connection dbConnection = null;
+    private PreparedStatement pStatement = null;
     private Statement statement = null;
 
     public DatabaseHelper() {
@@ -39,6 +41,20 @@ public class DatabaseHelper {
 
     }
 
+    public void printUserTable(){
+        try{
+            statement = dbConnection.createStatement();
+            ResultSet res = statement.executeQuery("SELECT * FROM recipe_users");
+            System.out.println("---------------Currrent User Table----------------");
+            while (res.next()) {
+                System.out.println("UserId: " + res.getString("userID") + " Username: " + res.getString("username")
+                        + " Password: " + res.getString("password"));
+            }
+        }
+        catch(SQLException e){
+            System.err.println("SQLException: " + e.getMessage());
+        }
+    }
     public void createIngredientTable() throws SQLException {
         String createTableSQL
                 = "CREATE TABLE ingredient ("
@@ -70,6 +86,7 @@ public class DatabaseHelper {
         statement.execute(createTableSQL);
         System.out.println("Table \"Recipe\" is created!");
     }
+    
     public boolean ingredientInsertIntoTable(Ingredient ingredient){
         String dairy  = ingredient.isDairy()?"1":"0";
         String insertTableSQL = "INSERT INTO ingredient"
@@ -99,12 +116,6 @@ public class DatabaseHelper {
             return true;
         }
     }
-    public boolean ingredientInsertIntoTable(String ingredName, int calories, int dairy) throws SQLException {
-        
-        Ingredient ingredient = new Ingredient(0, ingredName, calories, dairy);
-        return ingredientInsertIntoTable(ingredient);
-
-    }
     
     public boolean ingredientEditIntoTable(Ingredient ingredient){
         String dairy = ingredient.isDairy()?"1":"0";
@@ -113,9 +124,9 @@ public class DatabaseHelper {
                 + ingredient.getName() + "', "
                 + "calories_Count = '"
                 + ingredient.getCalories() + "', "
-                + "is_Dairy = '"
+                + "is_Dairy = "
                 + dairy
-                + "' WHERE ingredientID = " + "'" + ingredient.getID() + "';";
+                + " WHERE ingredientID = " + "'" + ingredient.getID() + "';";
         
         System.out.println(insertEditTableSQL);
         try{
@@ -154,138 +165,121 @@ public class DatabaseHelper {
         return false;
     }
     
-    public boolean recipeDeleteIntoTable(String recipeName) throws SQLException {
-        String recipeDeleteTableSQL = "DELETE FROM recipe "
-                + "WHERE recipe_Name = " + "'" + recipeName + "';";
-        System.out.println(recipeDeleteTableSQL);
-        dbConnection = getDBConnection();
-        statement = dbConnection.createStatement();
-        // execute insert SQL statement
-        boolean recipeExists = checkDuplicate("recipe", "recipe_Name", recipeName);
-        if(recipeExists) {
-            statement.execute(recipeDeleteTableSQL);
-            return false;
-        }
+    public boolean recipeInsertIntoTable(Recipe recipe) {    
+        
+        try{
+            boolean hasDuplicate = checkDuplicate("recipe", "recipeID", Integer.toString(recipe.getID()));
+            if (!hasDuplicate) {
+                pStatement = dbConnection.prepareStatement("INSERT INTO recipe"
+                    + "(recipe_Name, recipe_Description, recipe_Ingredients, recipe_ChefID, recipe_numCooked, recipe_Rating, recipe_Calorie ) " 
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?)");
+                pStatement.setString(1, recipe.getName());
+                pStatement.setString(2, recipe.getDescription());
+                pStatement.setString(3, recipe.getIngredients());
+                pStatement.setInt(4, recipe.getChefID());
+                pStatement.setInt(5, recipe.getNumCooked());
+                pStatement.setInt(6, recipe.getRating());
+                pStatement.setInt(7, recipe.getCalories());
 
+                // execute insert SQL stetement
+                pStatement.executeUpdate();
+                return false;
+            } else {
+                System.err.println("There is a duplicate Recipe");
+            }
+        }
+        catch(SQLException e){
+            System.err.println("SQLException: " + e.getMessage());
+        }
         return true;
     }
     
-    public boolean recipeInsertIntoTable(String recipeName, String recipeDescription, String ingredientIds, int chefID, int rating, int calorie ) throws SQLException {
-        //String insertTableSQL = "INSERT INTO recipe"
-          //      + "(recipe_Name, recipe_Description, recipe_Ingredients, recipe_ChefID, recipe_numCooked, recipe_rating) " + "VALUES"
-             //   + "('" + recipeName + "', '" + recipeDescription + "', '" + ingredientIds + "', '" + chefID +  "', '" + '0' + "', '" + rating "')";
-        String insertTableSQL = "INSERT INTO recipe"
-                + "(recipe_Name, recipe_Description, recipe_Ingredients, recipe_ChefID, recipe_numCooked, recipe_rating, recipe_Calorie ) " + "VALUES"
-                + "('" + recipeName + "','" + recipeDescription + "','" + ingredientIds +
-                "','" + chefID + "','" + "0" +  "','" + rating + "','" + calorie + "')";        
+    public boolean recipeEditIntoTable(Recipe recipe){
         
-
-        boolean hasDuplicate = checkDuplicate("recipe", "recipe_Name", recipeName);
-        if (!hasDuplicate) {
-            statement = dbConnection.createStatement();
-
-            System.out.println(insertTableSQL);
-
+        try{
+            pStatement = dbConnection.prepareStatement("UPDATE recipe SET recipe_Name = ?,"+
+                    "recipe_Description = ?, recipe_Ingredients = ?, recipe_chefID = ?, "+
+                    "recipe_numCooked = ?, recipe_Rating = ?, recipe_Calorie = ? WHERE recipeID = ?");
+                pStatement.setString(1, recipe.getName());
+                pStatement.setString(2, recipe.getDescription());
+                pStatement.setString(3, recipe.getIngredients());
+                pStatement.setInt(4, recipe.getChefID());
+                pStatement.setInt(5, recipe.getNumCooked());
+                pStatement.setInt(6, recipe.getRating());
+                pStatement.setInt(7, recipe.getCalories());
+                pStatement.setInt(8, recipe.getID());
             // execute insert SQL stetement
-            statement.executeUpdate(insertTableSQL);
-            return false;
-        } else {
-            System.out.println("There is a duplicate Ingredient");
-            return true;
+            boolean recipeExists = checkDuplicate("recipe", "recipeID", Integer.toString(recipe.getID()));
+            if(recipeExists) {
+                pStatement.execute();
+                return true;
+            }
         }
-        
+        catch(SQLException e){
+            System.err.println("SQLException: " + e.getMessage());
+        }
+        return false;
+             
     }
     
-    public boolean userInsertIntoTable(String userName, String userPassword) throws SQLException {
+    public boolean recipeDeleteIntoTable(Recipe recipe) {
+        String recipeDeleteTableSQL = "DELETE FROM recipe "
+                + "WHERE recipeID = " + "'" + recipe.getID() + "';";
+        System.out.println(recipeDeleteTableSQL);
+        try{
+            statement = dbConnection.createStatement();
+            // execute insert SQL statement
+            boolean recipeExists = checkDuplicate("recipe", "recipeID", Integer.toString(recipe.getID()));
+            if(recipeExists) {
+                statement.execute(recipeDeleteTableSQL);
+                return false;
+            }
+        }
+        catch(SQLException e){
+            System.err.println("SQLException: " + e.getMessage());
+        }
+        return true;
+    }
+    
+    public boolean userInsertIntoTable(String userName, String userPassword) {
 
         String insertTableSQL = "INSERT INTO recipe_users"
                 + "(USERNAME, PASSWORD ) " + "VALUES"
                 + "('" + userName + "','" + userPassword + "')";
 
         boolean hasDuplicate = checkDuplicate("recipe_users", "username", userName);
+        try{
+            if (!hasDuplicate) {
+                statement = dbConnection.createStatement();
 
-        if (!hasDuplicate) {
-            statement = dbConnection.createStatement();
+                System.out.println(insertTableSQL);
 
-            System.out.println(insertTableSQL);
-
-            // execute insert SQL stetement
-            statement.executeUpdate(insertTableSQL);
-            return false;
-        } else {
-            System.out.println("There is a duplicate Username");
-            return true;
-        }
-
-        /*
-        dbConnection = getDBConnection();
-        statement = dbConnection.createStatement();
-
-        //System.out.println(insertTableSQL);
-
-        // execute insert SQL stetement
-        statement.executeUpdate(insertTableSQL);
-         */
-    }
-
-    /*
-    public void deleteRow(String tableName, String primaryKey) throw SQLException {
-        
-        String insertTableSQL = "DELETE FROM " + tableName + " WHERE ";
-        
-        
-    }
-     */
-    public void printUserTable() throws SQLException {
-
-        statement = dbConnection.createStatement();
-        ResultSet res = statement.executeQuery("SELECT * FROM recipe_users");
-        System.out.println("---------------Currrent User Table----------------");
-        while (res.next()) {
-            System.out.println("UserId: " + res.getString("userID") + " Username: " + res.getString("username")
-                    + " Password: " + res.getString("password"));
-        }
-
-    }
-    
-    public void printRecipeTable() throws SQLException {
-        
-        statement = dbConnection.createStatement();
-        ResultSet res = statement.executeQuery("SELECT * FROM recipe");
-        System.out.println("---------------Currrent Recipe Table----------------");
-        while (res.next()) {
-            System.out.println("RecipeId: " + res.getString("recipeID") + " Recipe Name: " + res.getString("recipe_Name"));
-            System.out.println("Recipe Description: " + res.getString("recipe_Description"));
-            
-            String[] recipeSplit = res.getString("recipe_Ingredients").split(",");
-            String ingredientNames = "";
-            for(int i = 0; i < recipeSplit.length; i++) {
-                String query = "SELECT ingredient_name FROM ingredient "
-                + "WHERE ingredientID = " + "'" + recipeSplit[i] + "';";
-                ResultSet resultSet = getQuerySet(query);
-                if (resultSet.first()) {
-                    ingredientNames += resultSet.getString("ingredient_name") + ", ";
-                }
+                // execute insert SQL stetement
+                statement.executeUpdate(insertTableSQL);
+                return false;
+            } else {
+                System.out.println("There is a duplicate Username");
             }
-            
-            // Remove last comma
-            ingredientNames = ingredientNames.substring(0, ingredientNames.length()-2);
-            
-            System.out.println("Recipe Ingredients: " + ingredientNames);
-            System.out.println("Recipe ChedId: " + res.getString("recipe_ChefID") + " Recipe Number of Times Cooked: " + res.getString("recipe_numCooked"));
-            System.out.println("Recipe Rating: " + res.getString("recipe_rating"));
-            System.out.println("Recipe Calroie: " + res.getString("recipe_Calorie"));
         }
+        catch(SQLException e){
+            System.err.println("SQLException: " + e.getMessage());
+        }
+        return true;
     }
-    
 
-    public void closeConnection() throws SQLException {
-        if (statement != null) {
-            statement.close();
+    public void closeConnection() {
+        try{
+
+            if (statement != null) {
+                statement.close();
+            }
+
+            if (dbConnection != null) {
+                dbConnection.close();
+            }
         }
-
-        if (dbConnection != null) {
-            dbConnection.close();
+        catch(SQLException e){
+            System.err.println("SQLException: " + e.getMessage());
         }
     }
 
@@ -306,12 +300,17 @@ public class DatabaseHelper {
 
     }
 
-    public ResultSet getQuerySet(String query) throws SQLException {
+    public ResultSet getQuerySet(String query) {
+        try{
 
-        statement = this.dbConnection.createStatement();
-        ResultSet res = statement.executeQuery(query);
-        return res;
-
+            statement = this.dbConnection.createStatement();
+            ResultSet res = statement.executeQuery(query);
+            return res;
+        }
+        catch(SQLException e){
+            System.err.println("SQLException: " + e.getMessage());
+        }
+        return null;
     }
 
     public boolean checkDuplicate(String tableName, String columnName, String target) {
@@ -336,22 +335,27 @@ public class DatabaseHelper {
         return true;
     }
 
-    public boolean deleteAccount(String username) throws SQLException {
+    public boolean deleteAccount(String username) {
+        try{
+            statement = dbConnection.createStatement();
+            int userID;
+            // account table 
+            ResultSet res = statement.executeQuery("SELECT * FROM recipe_users WHERE username='" + username + "'");
+            if (res.first()) {
+                userID = res.getInt("userID");
+            } else {
+                return false;
+            }
 
-        statement = dbConnection.createStatement();
-        int userID;
-        // account table 
-        ResultSet res = statement.executeQuery("SELECT * FROM recipe_users WHERE username='" + username + "'");
-        if (res.first()) {
-            userID = res.getInt("userID");
-        } else {
-            return false;
+            // Delete account by userid
+            String deleteStatement = "DELETE FROM recipe_users WHERE userID=" + userID;
+            int deleteResult = statement.executeUpdate(deleteStatement);
+            return deleteResult > 0;
         }
-
-        // Delete account by userid
-        String deleteStatement = "DELETE FROM recipe_users WHERE userID=" + userID;
-        int deleteResult = statement.executeUpdate(deleteStatement);
-        return deleteResult > 0;
+        catch(SQLException e){
+            System.err.println("SQLException: "+e.getMessage());
+        }
+        return false;
     }
 
     public ObservableList<Ingredient> updateIngredientList(ObservableList<Ingredient> curList){
@@ -374,7 +378,32 @@ public class DatabaseHelper {
         }
         return null;
     }
-
+    
+    public ObservableList<Recipe> updateRecipeList(ObservableList<Recipe> curList){
+        try{
+            ResultSet res = getQuerySet("SELECT * FROM recipe");
+            while (res.next()){
+                boolean dupl = false;
+                for(Recipe recipe: curList){
+                    if (recipe.getName().equals(res.getString("recipe_Name")))
+                        dupl = true;
+                }
+                Recipe cur = new Recipe(res.getInt("recipeID"), 
+                        res.getString("recipe_Name"), res.getString("recipe_Description"), 
+                        res.getString("recipe_Ingredients"), res.getInt("recipe_chefID"),
+                        res.getInt("recipe_numCooked"), res.getInt("recipe_Rating"),
+                        res.getInt("recipe_Calorie")
+                );
+                if (!dupl)
+                    curList.add(cur);
+            }
+            return curList;
+        }
+        catch(SQLException ex){
+            System.err.println("SQL Exception: " + ex.getMessage());
+        }
+        return null;
+    }
    
 
 

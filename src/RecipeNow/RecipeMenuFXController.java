@@ -6,157 +6,263 @@
 package RecipeNow;
 
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 
 /**
  * FXML Controller class
  *
- * @author Youngmin
+ * @author Youngmin, Eric
  */
 public class RecipeMenuFXController implements Initializable, GuiHelper {
-    
-    
+
     private DatabaseHelper db;
     @FXML
-    private TextField newRecipe_recipeName;
+    private ListView recipe_recipeList;
     @FXML
-    private Button newRecipe_addRecipe;
+    private Button recipe_addRecipe;
     @FXML
-    private TextField newRecipe_recipeIngredients;
+    private Button recipe_editRecipe;
     @FXML
-    private TextField newRecipe_recipeRating;
-    @FXML
-    private TextField newRecipe_recipeChefId;
-    @FXML
-    private Button newRecipe_deleteRecipe;
-    @FXML
-    private TextArea newRecipe_recipeInstruction;
-    
+    private Button recipe_deleteRecipe;
+
+    private ObservableList<Recipe> recipeList = FXCollections.observableArrayList();
+
+    private ObservableList<Ingredient> ingredientList = FXCollections.observableArrayList();
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         db = app.db;
+        recipeList = db.updateRecipeList(recipeList);
+        recipe_recipeList.setItems(recipeList.sorted((Recipe i1, Recipe i2) -> i1.getName().compareToIgnoreCase(i2.getName())));
+        ingredientList = db.updateIngredientList(ingredientList);
     }
 
     @FXML
-    private void newRecipe_addRecipeActionPerformed(ActionEvent event) throws SQLException {
-        
-        // Check if name and calorie text fields are filled 
-        boolean hasDuplicate;
-        
-        if(!checkNull()) {
-            String recipeName = newRecipe_recipeName.getText();
-            String recipeDescription = newRecipe_recipeInstruction.getText();
-            String recipeIngredientIds = "";
-            int recipeRating = Integer.parseInt(newRecipe_recipeRating.getText());
-            int chefId = Integer.parseInt(newRecipe_recipeChefId.getText());
-            String[] recipeSplit = newRecipe_recipeIngredients.getText().split(",");
-            int totalCalorie = 0;
-
-            boolean ingCheck = true;
-            String[] ingredientIds = new String[recipeSplit.length];
-            for(int i = 0; i < recipeSplit.length; i++) {
-                String query = "SELECT * FROM ingredient "
-                + "WHERE ingredient_name = " + "'" + recipeSplit[i] + "';";
-                ResultSet resultSet = this.db.getQuerySet(query);
-                if (!resultSet.first()) {
-                    new Alert(Alert.AlertType.ERROR, "One or more Ingredient is not in the database").showAndWait();
-                    ingCheck = false;
-                } else {
-                    ingredientIds[i] = Integer.toString(resultSet.getInt("ingredientID"));
-                    totalCalorie += resultSet.getInt("calories_Count");
-                }
-            }
-            if(ingCheck) {
-                List<String> strs = Arrays.asList(ingredientIds);
-                recipeIngredientIds = String.join(",", strs);
-            }
-            System.out.println("Ingredients to be added to recipe: " + recipeIngredientIds);
-                try {
-                    hasDuplicate = db.recipeInsertIntoTable(recipeName, recipeDescription, recipeIngredientIds, recipeRating, chefId, totalCalorie);
-                    if(hasDuplicate) {
-                        System.out.println("Add Recipe Failed");
-                        new Alert(Alert.AlertType.ERROR, "The Recipe is already in the database or Server Connection has failed").showAndWait();
-                    } else {
-                        System.out.println("Add Recipe Success " + " Recipe Name: " + newRecipe_recipeName.getText());
-                        new Alert(Alert.AlertType.INFORMATION, "Add Ingredient Success").showAndWait();
-                }
-                } catch (NumberFormatException ex) {
-                    System.out.println("NumberFormatException: " + ex.getMessage());
-                    new Alert(Alert.AlertType.ERROR, "Please only enter numeric values for Chef ID, and Rating").showAndWait();
-                    resetComponent();
-                    // exit function
-                    return;
-                }
-            }
-        resetComponent();
+    private void recipe_addRecipeActionPerformed(ActionEvent event) {   
+        showDialog(false);
     }
-    
+
     @FXML
-    private void newRecipe_deleteRecipeActionPerformed(ActionEvent event) {
-        // Check if name and calorie text fields are filled 
-        boolean checkNull = newRecipe_recipeName.getText().equals("Enter Recipe Name") || newRecipe_recipeName.getText().isEmpty();
-        boolean deleteSuccess = false;
-        if(!checkNull) {
-            try {
-                deleteSuccess = db.recipeDeleteIntoTable(newRecipe_recipeName.getText());
-            } catch (SQLException ex) {
-                System.out.println("SQL Exception: " + ex.getMessage());
-            }
-            
-            if(deleteSuccess) {
-                System.out.println("Delete Recipe Failed");
-                new Alert(Alert.AlertType.ERROR, "Delete Recipe Failed").showAndWait();
-                resetComponent();
-            } else {
-                System.out.println("Delete Recipe Success " + " Recipe Name:" + newRecipe_recipeName.getText());
-                new Alert(Alert.AlertType.INFORMATION, "Delete Recipe Success").showAndWait();
-                resetComponent();
-            }
-            
+    private void recipe_editRecipeActionPerformed(ActionEvent event) {
+        if (recipe_recipeList.getSelectionModel().getSelectedIndex() >= 0) {
+            showDialog(true);
         }
-        resetComponent();
+    }
+
+    @FXML
+    private void recipe_deleteRecipeActionPerformed(ActionEvent event) {
+
+        int curInd = recipe_recipeList.getSelectionModel().getSelectedIndex();
+        if (curInd >= 0) {
+            Recipe curRecipe = (Recipe) recipe_recipeList.getSelectionModel().getSelectedItem();
+            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete the recipe: " + curRecipe.getName());
+            confirmation.setTitle("Delete Recipe");
+            confirmation.setHeaderText("Delete Recipe?");
+            confirmation.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    db.recipeDeleteIntoTable(curRecipe);
+                    recipeList.remove(curRecipe);
+                    resetComponent();
+                }
+            });
+        } else {
+            Alert noSelect = new Alert(Alert.AlertType.ERROR, "You must select a recipe to delete");
+            noSelect.setTitle("No Selection");
+            noSelect.setHeaderText("No Recipe Selected");
+        }
     }
 
     @Override
     public boolean checkNull() {
-        return (newRecipe_recipeName.getText().equals("") || 
-                newRecipe_recipeInstruction.getText().equals("") ||
-                newRecipe_recipeIngredients.getText().equals("") ||
-                newRecipe_recipeRating.getText().equals("") ||
-                newRecipe_recipeChefId.getText().equals("")
-                );
-        
+        return true;
     }
 
     @Override
     public void resetComponent() {
-        newRecipe_recipeName.setText("Enter Recipe Name");
-        newRecipe_recipeInstruction.setText("Enter Description");
-        newRecipe_recipeIngredients.setText("Enter Ingredient names ex) Apple,Orange,Banana");
-        newRecipe_recipeRating.setText("Enter Rating ex) 0~5");
-        newRecipe_recipeChefId.setText("Enter Chef ID");
+        recipeList = db.updateRecipeList(recipeList);
+        recipe_recipeList.setItems(recipeList.sorted((Recipe i1, Recipe i2) -> i1.getName().compareToIgnoreCase(i2.getName())));
     }
 
     @Override
     public void closeFrame() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     
+    private void showDialog(boolean edit){
+        Dialog<Recipe> addRecipe = new Dialog<>();
+        if(edit){
+            addRecipe.setTitle("Edit Recipe");
+            addRecipe.setHeaderText("Modify an exisiting recipe in the database");
+        }
+        else{
+            addRecipe.setTitle("Add Recipe");
+            addRecipe.setHeaderText("Create a new recipe in the database");
+        }
+        Recipe curRecipe = (Recipe) recipe_recipeList.getSelectionModel().getSelectedItem();
 
-    
+        //Compose GridPane for dialog
+        GridPane addRecipeGrid = new GridPane();
+        addRecipeGrid.setPrefSize(500, 900);
+        addRecipeGrid.setHgap(10);
+        addRecipeGrid.setVgap(15);
+        addRecipeGrid.setPadding(new Insets(20, 100, 10, 15));
+        //public Recipe(int ID, String name, String description, String ingredients, int chefID, int numCooked, int rating, int calories){
+        
+        TextField recipeName = new TextField();
+        if(edit)
+            recipeName.setText(curRecipe.getName());
+        recipeName.setPromptText("Name");
+
+        addRecipe.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        TextArea recipeDescription = new TextArea();
+        if(edit)
+            recipeDescription.setText(curRecipe.getDescription());
+        recipeDescription.setPromptText("Description");
+        recipeDescription.setMinHeight(250);
+        recipeDescription.setMinWidth(400);
+        recipeDescription.setPrefColumnCount(100);
+        recipeDescription.setWrapText(true);
+
+        ArrayList<ComboBox> recipeIngredients = new ArrayList<>();
+        
+        if (edit){
+            for (int i : curRecipe.getIngredientsArray()) {
+                ComboBox temp = new ComboBox();
+                temp.setItems(ingredientList);
+                temp.setPrefWidth(250);
+                for (Ingredient cur : ingredientList) {
+                    if (cur.getID() == i) {
+                        temp.setValue(cur);
+                    }
+                }
+                recipeIngredients.add(temp);
+            }
+        }
+        else {
+            recipeIngredients.add(new ComboBox());
+            recipeIngredients.get(0).setItems(ingredientList);
+            recipeIngredients.get(0).setPrefWidth(250);
+        }
+
+        Button addIngredient = new Button("Add Ingredient");
+        Button removeIngredient = new Button("Remove Ingredient");
+
+        addRecipeGrid.add(new Label("Name"), 0, 0);
+        addRecipeGrid.add(recipeName, 1, 0);
+        addRecipeGrid.add(new Label("Description"), 0, 1);
+        addRecipeGrid.add(recipeDescription, 0, 2, 2, 1);
+        addRecipeGrid.add(new Label("Ingredients"), 0, 3);
+        
+        int j = 0;
+        for (ComboBox cur : recipeIngredients) {
+            addRecipeGrid.add(cur, 0, 4 + j, 2, 1);
+            j++;
+        }
+        addRecipeGrid.add(addIngredient, 3, 3 + j);
+        if (recipeIngredients.size() > 1)
+            addRecipeGrid.add(removeIngredient, 4, 3 + j);
+
+        Node okButton = addRecipe.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(!edit);
+
+        addIngredient.setOnAction((ActionEvent event1) -> {
+            ComboBox temp = new ComboBox();
+            temp.setItems(ingredientList);
+            temp.setPrefWidth(250);
+            recipeIngredients.add(temp);
+            addRecipeGrid.add(recipeIngredients.get(recipeIngredients.size() - 1), 0, recipeIngredients.size() + 3, 2, 1);
+            addRecipeGrid.getChildren().remove(addIngredient);
+            addRecipeGrid.getChildren().remove(removeIngredient);
+            addRecipeGrid.add(addIngredient, 3, recipeIngredients.size() + 3);
+            if (recipeIngredients.size() > 1)
+                addRecipeGrid.add(removeIngredient, 4, recipeIngredients.size() + 3);
+            addRecipe.getDialogPane().getScene().getWindow().sizeToScene();
+        });
+        removeIngredient.setOnAction((ActionEvent event1) -> {
+            if (recipeIngredients.size() > 1){
+                ComboBox temp = recipeIngredients.get(recipeIngredients.size() - 1);
+                addRecipeGrid.getChildren().remove(temp);
+                addRecipeGrid.getChildren().remove(addIngredient);
+                addRecipeGrid.getChildren().remove(removeIngredient);
+                recipeIngredients.remove(temp);
+                addRecipeGrid.add(addIngredient, 3, recipeIngredients.size() + 3);
+                if (recipeIngredients.size() > 1)
+                    addRecipeGrid.add(removeIngredient, 4, recipeIngredients.size() + 3);
+                addRecipe.getDialogPane().getScene().getWindow().sizeToScene();
+            }
+        });
+        recipeName.textProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(newValue.trim().isEmpty()
+                    || recipeDescription.getText().trim().isEmpty());
+        });
+
+        recipeDescription.textProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(newValue.trim().isEmpty()
+                    || recipeName.getText().trim().isEmpty());
+        });
+        
+        addRecipe.getDialogPane().setContent(addRecipeGrid);
+        
+        
+        Platform.runLater(() -> recipeName.requestFocus());
+
+        addRecipe.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                int[] ingredients = new int[recipeIngredients.size()];
+                int calories = 0;
+                int i = 0;
+                for (ComboBox cur : recipeIngredients) {
+                    Ingredient temp = (Ingredient) cur.getValue();
+                    ingredients[i] = temp.getID();
+                    calories += temp.getCalories();
+                    i++;
+
+                }
+                if(edit){
+                    curRecipe.setName(recipeName.getText());
+                    curRecipe.setDescription(recipeDescription.getText());
+                    curRecipe.setIngredients(ingredients);
+                    curRecipe.setCalories(calories);
+                    return curRecipe;
+                }
+                else{
+                    return new Recipe(0, recipeName.getText(), recipeDescription.getText(), ingredients, app.loginCntl.getUserid(), 0, 0, calories);
+                }
+            }
+            return null;
+        });
+
+        Optional<Recipe> result = addRecipe.showAndWait();
+
+        result.ifPresent(recipe -> {
+            if (edit)
+               db.recipeEditIntoTable(recipe);
+            else
+                db.recipeInsertIntoTable(recipe);
+            resetComponent();
+        });
+    }
 }

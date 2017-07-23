@@ -6,8 +6,6 @@
 package RecipeNow;
 
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.Comparator;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -25,7 +23,7 @@ import javafx.scene.layout.GridPane;
 /**
  * FXML Controller class
  *
- * @author Youngmin
+ * @author Youngmin, Eric
  */
 public class IngredientMenuFXController implements Initializable, GuiHelper {
 
@@ -57,125 +55,18 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
     @FXML
     private void newIng_addIngActionPerformed(ActionEvent event) {
         //Custom Add Ingredient dialog box using http://code.makery.ch/blog/javafx-dialogs-official/ tutorial.
+        showDialog(false);
         
-        Dialog<Ingredient> addIng = new Dialog<>();
-        addIng.setTitle("Add Ingredient");
-        addIng.setHeaderText("Create a new ingredient in the database");
-        addIng.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        GridPane addIngGrid = new GridPane();
-        addIngGrid.setHgap(10);
-        addIngGrid.setVgap(15);
-        addIngGrid.setPadding(new Insets(20,100,10,15));
-        
-        TextField ingName = new TextField();
-        ingName.setPromptText("Name");
-        TextField ingCalories = new TextField();
-        ingCalories.setPromptText("Calories");
-        CheckBox ingDairy = new CheckBox("Dairy");
-        
-        addIngGrid.add(new Label("Name"), 0, 0);
-        addIngGrid.add(ingName, 1, 0);
-        addIngGrid.add(new Label("Calories"), 0, 1);
-        addIngGrid.add(ingCalories, 1, 1);
-        addIngGrid.add(ingDairy, 0, 2);
-        
-        Node okButton = addIng.getDialogPane().lookupButton(ButtonType.OK);
-        okButton.setDisable(true);
-        
-        ingName.textProperty().addListener((observable, oldValue, newValue) -> {
-            okButton.setDisable(newValue.trim().isEmpty() || ingCalories.getText().trim().isEmpty());
-        });
-        
-        ingCalories.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                ingCalories.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-            okButton.setDisable(newValue.trim().isEmpty() || ingName.getText().trim().isEmpty());
-        });
-        
-        addIng.getDialogPane().setContent(addIngGrid);
-        Platform.runLater(() -> ingName.requestFocus());
-        
-        addIng.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK){
-                return new Ingredient(0, ingName.getText(), Integer.parseInt(ingCalories.getText()), ingDairy.isSelected());
-            }
-            return null;
-        });
-        
-        Optional<Ingredient> result = addIng.showAndWait();
-        
-        result.ifPresent(ingredient -> {
-            db.ingredientInsertIntoTable(ingredient);
-            resetComponent();
-        });
     }
 
     @FXML
     private void newIng_editIngActionPerformed(ActionEvent event) {
         int curInd = newIng_ingredientList.getSelectionModel().getSelectedIndex();
-        Ingredient ingredient = (Ingredient)newIng_ingredientList.getSelectionModel().getSelectedItem();
         if (curInd >= 0){
-        //Custom Edit Ingredient dialog box using http://code.makery.ch/blog/javafx-dialogs-official/ tutorial.
-        
-        Dialog<Ingredient> addIng = new Dialog<>();
-        addIng.setTitle("Edit Ingredient");
-        addIng.setHeaderText("Edit an ingredient in the database");
-        addIng.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        GridPane addIngGrid = new GridPane();
-        addIngGrid.setHgap(10);
-        addIngGrid.setVgap(15);
-        addIngGrid.setPadding(new Insets(20,100,10,15));
-        
-        TextField ingName = new TextField(ingredient.getName());
-        ingName.setPromptText("Name");
-        TextField ingCalories = new TextField(Integer.toString(ingredient.getCalories()));
-        ingCalories.setPromptText("Calories");
-        
-        CheckBox ingDairy = new CheckBox("Dairy");
-        ingDairy.setSelected(ingredient.isDairy());
-        
-        addIngGrid.add(new Label("Name"), 0, 0);
-        addIngGrid.add(ingName, 1, 0);
-        addIngGrid.add(new Label("Calories"), 0, 1);
-        addIngGrid.add(ingCalories, 1, 1);
-        addIngGrid.add(ingDairy, 0, 2);
-        
-        Node okButton = addIng.getDialogPane().lookupButton(ButtonType.OK);
-        okButton.setDisable(true);
-        
-        ingName.textProperty().addListener((observable, oldValue, newValue) -> {
-            okButton.setDisable(newValue.trim().isEmpty() || ingCalories.getText().trim().isEmpty());
-        });
-        
-        ingCalories.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                ingCalories.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-            okButton.setDisable(newValue.trim().isEmpty() || ingName.getText().trim().isEmpty());
-        });
-        
-        addIng.getDialogPane().setContent(addIngGrid);
-        Platform.runLater(() -> ingName.requestFocus());
-        
-        addIng.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK){
-                ingredient.setName(ingName.getText());
-                ingredient.setDairy(ingDairy.isSelected());
-                ingredient.setCalories(Integer.parseInt(ingCalories.getText()));
-                return ingredient;
-            }
-            return null;
-        });
-        
-        Optional<Ingredient> result = addIng.showAndWait();
-        
-        result.ifPresent(editIngredient -> {
-            db.ingredientEditIntoTable(editIngredient);
-            resetComponent();
-        });
+            showDialog(true);
         }
     }
+    
     @FXML
     private void newIng_deleteIngActionPerformed(ActionEvent event) {
         int curInd = newIng_ingredientList.getSelectionModel().getSelectedIndex();
@@ -187,9 +78,15 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
             confirmation.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK){
                     db.ingredientDeleteIntoTable(curIngredient);
+                    ingredientList.remove(curIngredient);
                     resetComponent();
                 }
             });
+        }
+        else{
+            Alert noSelect = new Alert(Alert.AlertType.ERROR, "You must select an ingredient to delete");
+            noSelect.setTitle("No Selection");
+            noSelect.setHeaderText("No Ingredient Selected");
         }
     }
 
@@ -207,5 +104,75 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
     @Override
     public void closeFrame() {
     }
-    
+    public void showDialog(boolean edit){
+        Dialog<Ingredient> addIng = new Dialog<>();
+        Ingredient ingredient = (Ingredient)newIng_ingredientList.getSelectionModel().getSelectedItem();
+        
+        addIng.setTitle("Add Ingredient");
+        addIng.setHeaderText("Create a new ingredient in the database");
+        addIng.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        GridPane addIngGrid = new GridPane();
+        addIngGrid.setHgap(10);
+        addIngGrid.setVgap(15);
+        addIngGrid.setPadding(new Insets(20,100,10,15));
+        
+        TextField ingName = new TextField();
+        ingName.setPromptText("Name");
+        TextField ingCalories = new TextField();
+        ingCalories.setPromptText("Calories");
+        
+        CheckBox ingDairy = new CheckBox("Dairy");
+        
+        if(edit){
+            ingName.setText(ingredient.getName());
+            ingCalories.setText(Integer.toString(ingredient.getCalories()));
+            ingDairy.setSelected(ingredient.isDairy());
+        }
+        addIngGrid.add(new Label("Name"), 0, 0);
+        addIngGrid.add(ingName, 1, 0);
+        addIngGrid.add(new Label("Calories"), 0, 1);
+        addIngGrid.add(ingCalories, 1, 1);
+        addIngGrid.add(ingDairy, 0, 2);
+        
+        Node okButton = addIng.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(!edit);
+        
+        ingName.textProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(newValue.trim().isEmpty() || ingCalories.getText().trim().isEmpty());
+        });
+        
+        ingCalories.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                ingCalories.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+            okButton.setDisable(newValue.trim().isEmpty() || ingName.getText().trim().isEmpty());
+        });
+        
+        addIng.getDialogPane().setContent(addIngGrid);
+        Platform.runLater(() -> ingName.requestFocus());
+        
+        addIng.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK){
+                if (edit){
+                    ingredient.setName(ingName.getText());
+                    ingredient.setDairy(ingDairy.isSelected());
+                    ingredient.setCalories(Integer.parseInt(ingCalories.getText()));
+                    return ingredient;
+                }
+                else
+                    return new Ingredient(0, ingName.getText(), Integer.parseInt(ingCalories.getText()), ingDairy.isSelected());
+            }
+            return null;
+        });
+        
+        Optional<Ingredient> result = addIng.showAndWait();
+        
+        result.ifPresent(tempIngredient -> {
+            if (edit)
+                db.ingredientEditIntoTable(tempIngredient);
+            else
+                db.ingredientInsertIntoTable(tempIngredient);
+            resetComponent();
+        });
+    }
 }
