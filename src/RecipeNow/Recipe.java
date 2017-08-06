@@ -5,13 +5,14 @@
  */
 package RecipeNow;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  *
  * @author Eric
  */
-public class Recipe {  
+public class Recipe implements Serializable {  
     
     private int ID;
     private String name;
