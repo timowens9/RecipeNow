@@ -34,8 +34,7 @@ public class app extends Application{
     }
     
      public static void main(String[] args)  {
-         launch();
-        
+        launch();
     }
     @Override
     public void stop(){

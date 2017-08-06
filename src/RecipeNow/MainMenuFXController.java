@@ -34,7 +34,9 @@ public class MainMenuFXController implements Initializable {
     @FXML
     private MenuItem mainMenu_logoutMenuItem;
     @FXML
-    private Button mainMenu_printRecipeListButton;
+    private AnchorPane mainMenu;
+    @FXML
+    private Button mainMenu_localRecipeButton;
     /**
      * Initializes the controller class.
      */
@@ -66,6 +68,17 @@ public class MainMenuFXController implements Initializable {
         stage.show();
     }
     
+    @FXML
+    // Local Recipe Menu
+    private void mainMenu_localRecipeAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("RecipeLocalMenuFXML.fxml"));
+        AnchorPane recipeMenu = (AnchorPane) loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(recipeMenu));
+        stage.setTitle("RecipeNow - Local Recipe Menu");
+        stage.show();
+    }
+    
     @FXML 
     private void mainMenu_logoutAction(ActionEvent event) throws IOException {
         app.base.setScene(app.login);
@@ -74,5 +87,5 @@ public class MainMenuFXController implements Initializable {
     private void stop(){
         db.closeConnection();
     }
-    
+
 }
