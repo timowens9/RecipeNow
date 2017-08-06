@@ -47,6 +47,10 @@ public class RecipeMenuFXController implements Initializable, GuiHelper {
     private ObservableList<Recipe> recipeList = FXCollections.observableArrayList();
 
     private ObservableList<Ingredient> ingredientList = FXCollections.observableArrayList();
+    @FXML
+    private Button recipe_saveRecipeLocal;
+    
+    private RecipeList recipeLocal = new RecipeList();
 
     /**
      * Initializes the controller class.
@@ -91,7 +95,33 @@ public class RecipeMenuFXController implements Initializable, GuiHelper {
             Alert noSelect = new Alert(Alert.AlertType.ERROR, "You must select a recipe to delete");
             noSelect.setTitle("No Selection");
             noSelect.setHeaderText("No Recipe Selected");
+            noSelect.showAndWait();
         }
+    }
+    
+    @FXML
+    private void recipe_saveRecipeLocalActionPerformed(ActionEvent event) {
+        
+        int curInd = recipe_recipeList.getSelectionModel().getSelectedIndex();
+        Recipe curRecipe = (Recipe) recipe_recipeList.getSelectionModel().getSelectedItem();
+        if (curInd >= 0) {
+            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to add recipe to your local storage?: " + curRecipe.getName());
+            confirmation.setTitle("Add Recipe to local storage");
+            confirmation.setHeaderText("Add Recipe?");
+            confirmation.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    recipeLocal.addRecipe(curRecipe);
+                    recipeLocal.printRecipeList();
+                    resetComponent();
+                }
+            });
+        } else {
+            Alert noSelect = new Alert(Alert.AlertType.ERROR, "You must select a recipe to save locally");
+            noSelect.setTitle("No Selection");
+            noSelect.setHeaderText("No Recipe Selected");
+            noSelect.showAndWait();
+        }
+        
     }
 
     @Override
@@ -265,4 +295,6 @@ public class RecipeMenuFXController implements Initializable, GuiHelper {
             resetComponent();
         });
     }
+
+    
 }
