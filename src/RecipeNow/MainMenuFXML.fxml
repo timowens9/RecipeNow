@@ -44,6 +44,8 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="mainMenu_ingButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#mainMenu_addIngAction" prefHeight="25.0" prefWidth="120.0" text="Ingredient Menu" />
+                        <Button fx:id="mainMenu_changeUserName" layoutX="149.0" layoutY="14.0" mnemonicParsing="false" onAction="#mainMenu_changeUserName" prefHeight="25.0" prefWidth="153.0" text="Change Username" />
+                        <Button fx:id="mainMenu_changePassWord" layoutX="149.0" layoutY="50.0" mnemonicParsing="false" onAction="#mainMenu_changePassWord" prefHeight="25.0" prefWidth="154.0" text="Change Password" />
                      </children>
                   </AnchorPane>
             </content>
