@@ -195,7 +195,7 @@ public class DatabaseHelper {
     }
     
     public boolean recipeEditIntoTable(Recipe recipe){
-        
+
         try{
             pStatement = dbConnection.prepareStatement("UPDATE recipe SET recipe_Name = ?,"+
                     "recipe_Description = ?, recipe_Ingredients = ?, recipe_chefID = ?, "+
@@ -403,6 +403,53 @@ public class DatabaseHelper {
             System.err.println("SQL Exception: " + ex.getMessage());
         }
         return null;
+    }
+    
+    public boolean changeUserName(String currentUserName, String newUserName) {
+        
+        try{
+            pStatement = dbConnection.prepareStatement("UPDATE recipe_users SET username = ? "+
+                    "WHERE username = ?");
+                pStatement.setString(1, newUserName);
+                pStatement.setString(2, currentUserName);
+
+            // execute insert SQL stetement
+            boolean currentUserExists = checkDuplicate("recipe_users", "username", currentUserName);
+            if(!currentUserExists) {
+                return false;
+            }
+       
+            boolean newUserExists = checkDuplicate("recipe_users", "username", newUserName);
+            if(!newUserExists) {
+                pStatement.execute();
+                return true;
+            }
+        }
+        catch(SQLException e){
+            System.err.println("SQLException: " + e.getMessage());
+        }
+        return false;
+             
+    }
+
+    public boolean changeUserPassword(String currentUserName, String newPassWord) {
+        try{
+            pStatement = dbConnection.prepareStatement("UPDATE recipe_users SET password = ? "+
+                    "WHERE username = ?");
+                pStatement.setString(1, newPassWord);
+                pStatement.setString(2, currentUserName);
+
+            // execute insert SQL stetement
+            boolean currentUserExists = checkDuplicate("recipe_users", "username", currentUserName);
+            if(currentUserExists) {
+                pStatement.execute();
+                return true;
+            }
+        }
+        catch(SQLException e){
+            System.err.println("SQLException: " + e.getMessage());
+        }
+        return false;
     }
    
 
