@@ -117,7 +117,8 @@ public class MainMenuFXController implements Initializable {
         grid.setPadding(new Insets(20, 150, 10, 10));
         
         TextField username = new TextField();
-        username.setPromptText("Current Username");
+        username.setText(app.loginCntl.getUsername());
+        username.setEditable(false);
         TextField username2 = new TextField();
         username2.setPromptText("New Username");
         
@@ -157,6 +158,7 @@ public class MainMenuFXController implements Initializable {
                 boolean updateResult = db.changeUserName(usernamePassword.getKey(), usernamePassword.getValue());
                 if(updateResult) {
                     new Alert(Alert.AlertType.INFORMATION, "Username change successful").showAndWait();
+                    app.loginCntl.setUsername(usernamePassword.getValue());
                 } else {
                     new Alert(Alert.AlertType.ERROR, "Username change failed").showAndWait();
                 }
@@ -169,7 +171,7 @@ public class MainMenuFXController implements Initializable {
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Change Password");
-        dialog.setHeaderText("Etner a new Password");
+        dialog.setHeaderText("Enter a new Password");
         
         // Set the button types.
         ButtonType loginButtonType = new ButtonType("Change", ButtonData.OK_DONE);
@@ -182,35 +184,36 @@ public class MainMenuFXController implements Initializable {
         grid.setPadding(new Insets(20, 150, 10, 10));
         
         TextField username = new TextField();
-        username.setPromptText("Current Username");
-        TextField username2 = new TextField();
-        username2.setPromptText("New Password");
+        username.setText(app.loginCntl.getUsername());
+        username.setEditable(false);
+        TextField password = new TextField();
+        password.setPromptText("New Password");
         
         grid.add(new Label("Username:"), 0, 0);
         grid.add(username, 1, 0);
         grid.add(new Label("New Password:"), 0, 1);
-        grid.add(username2, 1, 1);
+        grid.add(password, 1, 1);
 
         // Enable/Disable login button depending on whether a username was entered.
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
         
         // Do some validation (using the Java 8 lambda syntax).
-        username2.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(newValue.trim().isEmpty());
+        password.textProperty().addListener((observable, oldValue, newValue) -> {
+            loginButton.setDisable(newValue.trim().isEmpty() || password.getText().isEmpty());
         });
         
         dialog.getDialogPane().setContent(grid);
         
         // Request focus on the username field by default.
-        Platform.runLater(() -> username2.requestFocus());
+        Platform.runLater(() -> password.requestFocus());
         
         // Convert the result to a username-password-pair when the login button is clicked.
-        dialog.setResultConverter(dialogButton -> {
+        dialog.setResultConverter((ButtonType dialogButton) -> {
             if (dialogButton == loginButtonType) {
-                return new Pair<>(username.getText(), username2.getText());
-        }
-        return null;
+                return new Pair<>(username.getText(), password.getText());
+            }
+            return null;
         });
         
         Optional<Pair<String, String>> result = dialog.showAndWait();

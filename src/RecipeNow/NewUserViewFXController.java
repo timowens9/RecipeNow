@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -26,35 +27,6 @@ import javafx.stage.Stage;
  * @author Youngmin
  */
 public class NewUserViewFXController  implements Initializable, GuiHelper {
-
-    /**
-     * @return the userid
-     */
-    public int getUserid() {
-        return userid;
-    }
-
-    /**
-     * @param userid the userid to set
-     */
-    public void setUserid(int userid) {
-        this.userid = userid;
-    }
-
-    /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     
     @FXML
     private Button loginPage_printAccounts;
@@ -235,6 +207,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
     @Override
     public void resetComponent() {
         loginPage_userName.setText("");
+        Platform.runLater(() -> loginPage_userName.requestFocus());
         loginPage_passWord.setText("");
     }
 
@@ -252,5 +225,32 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
         
     }
 
-    
+     /**
+     * @return the userid
+     */
+    public int getUserid() {
+        return userid;
+    }
+
+    /**
+     * @param userid the userid to set
+     */
+    public void setUserid(int userid) {
+        this.userid = userid;
+    }
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 }

@@ -17,7 +17,6 @@ public class DatabaseHelper {
     private Connection dbConnection = null;
     private PreparedStatement pStatement = null;
     private Statement statement = null;
-
     public DatabaseHelper() {
         dbConnection = getDBConnection();
 
