@@ -5,24 +5,18 @@
  */
 package RecipeNow;
 
+import RecipeNow.app.DatabaseHelper;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -34,7 +28,6 @@ import javafx.scene.layout.GridPane;
  */
 public class RecipeMenuFXController implements Initializable, GuiHelper {
 
-    private DatabaseHelper db;
     @FXML
     private ListView recipe_recipeList;
     @FXML
@@ -57,26 +50,25 @@ public class RecipeMenuFXController implements Initializable, GuiHelper {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        db = app.db;
-        recipeList = db.updateRecipeList(recipeList);
+        recipeList = DatabaseHelper.updateRecipeList(recipeList);
         recipe_recipeList.setItems(recipeList.sorted((Recipe i1, Recipe i2) -> i1.getName().compareToIgnoreCase(i2.getName())));
-        ingredientList = db.updateIngredientList(ingredientList);
+        ingredientList = DatabaseHelper.updateIngredientList(ingredientList);
     }
 
     @FXML
-    private void recipe_addRecipeActionPerformed(ActionEvent event) {   
+    private void addRecipe(ActionEvent event) {   
         showDialog(false);
     }
 
     @FXML
-    private void recipe_editRecipeActionPerformed(ActionEvent event) {
+    private void editRecipe(ActionEvent event) {
         if (recipe_recipeList.getSelectionModel().getSelectedIndex() >= 0) {
             showDialog(true);
         }
     }
 
     @FXML
-    private void recipe_deleteRecipeActionPerformed(ActionEvent event) {
+    private void deleteRecipe(ActionEvent event) {
 
         int curInd = recipe_recipeList.getSelectionModel().getSelectedIndex();
         if (curInd >= 0) {
@@ -86,7 +78,7 @@ public class RecipeMenuFXController implements Initializable, GuiHelper {
             confirmation.setHeaderText("Delete Recipe?");
             confirmation.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    db.recipeDeleteIntoTable(curRecipe);
+                    DatabaseHelper.recipeDeleteIntoTable(curRecipe);
                     recipeList.remove(curRecipe);
                     resetComponent();
                 }
@@ -100,7 +92,7 @@ public class RecipeMenuFXController implements Initializable, GuiHelper {
     }
     
     @FXML
-    private void recipe_saveRecipeLocalActionPerformed(ActionEvent event) {
+    private void saveRecipeLocal(ActionEvent event) {
         
         int curInd = recipe_recipeList.getSelectionModel().getSelectedIndex();
         Recipe curRecipe = (Recipe) recipe_recipeList.getSelectionModel().getSelectedItem();
@@ -122,21 +114,6 @@ public class RecipeMenuFXController implements Initializable, GuiHelper {
             noSelect.showAndWait();
         }
         
-    }
-
-    @Override
-    public boolean checkNull() {
-        return true;
-    }
-
-    @Override
-    public void resetComponent() {
-        recipeList = db.updateRecipeList(recipeList);
-        recipe_recipeList.setItems(recipeList.sorted((Recipe i1, Recipe i2) -> i1.getName().compareToIgnoreCase(i2.getName())));
-    }
-
-    @Override
-    public void closeFrame() {
     }
 
     
@@ -289,11 +266,17 @@ public class RecipeMenuFXController implements Initializable, GuiHelper {
 
         result.ifPresent(recipe -> {
             if (edit)
-               db.recipeEditIntoTable(recipe);
+               DatabaseHelper.recipeEditIntoTable(recipe);
             else
-                db.recipeInsertIntoTable(recipe);
+                DatabaseHelper.recipeInsertIntoTable(recipe);
             resetComponent();
         });
+    }
+
+    @Override
+    public void resetComponent() {
+        recipeList = DatabaseHelper.updateRecipeList(recipeList);
+        recipe_recipeList.setItems(recipeList.sorted((Recipe i1, Recipe i2) -> i1.getName().compareToIgnoreCase(i2.getName())));
     }
 
     

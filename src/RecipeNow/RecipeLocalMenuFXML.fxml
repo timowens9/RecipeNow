@@ -9,7 +9,7 @@
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RecipeNow.RecipeLocalMenuFXMLController">
    <children>
       <ListView fx:id="recipe_recipeList" layoutX="107.0" layoutY="14.0" prefHeight="250.0" prefWidth="400.0" />
-      <Button fx:id="recipe_viewRecipe" layoutX="232.0" layoutY="278.0" mnemonicParsing="false" onAction="#recipe_viewRecipeActionPerformed" prefHeight="23.0" prefWidth="129.0" text="View Recipe" />
-      <Button fx:id="recipe_deleteRecipe" layoutX="232.0" layoutY="308.0" mnemonicParsing="false" onAction="#recipe_deleteRecipeActionPerformed" prefHeight="23.0" prefWidth="129.0" text="Delete Recipe" />
+      <Button fx:id="recipe_viewRecipe" layoutX="232.0" layoutY="278.0" mnemonicParsing="false" onAction="#viewRecipe" prefHeight="23.0" prefWidth="129.0" text="View Recipe" />
+      <Button fx:id="recipe_deleteRecipe" layoutX="232.0" layoutY="308.0" mnemonicParsing="false" onAction="#deleteRecipe" prefHeight="23.0" prefWidth="129.0" text="Delete Recipe" />
    </children>
 </AnchorPane>

@@ -5,6 +5,7 @@
  */
 package RecipeNow;
 
+import RecipeNow.app.DatabaseHelper;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -34,9 +35,7 @@ public class RecipeLocalMenuFXMLController implements Initializable, GuiHelper {
     private RecipeList recipeLocal;
     @FXML
     private Button recipe_viewRecipe;
-    
-    private DatabaseHelper db;
-    
+        
     private HashMap<Integer, String> ingredientMap;
     @FXML
     private Button recipe_deleteRecipe;
@@ -44,9 +43,8 @@ public class RecipeLocalMenuFXMLController implements Initializable, GuiHelper {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         recipeLocal = new RecipeList();
-        db = app.db;
         ingredientMap = new HashMap<>();
-        ingredientList = db.updateIngredientList(ingredientList);
+        ingredientList = DatabaseHelper.updateIngredientList(ingredientList);
         for(int i = 0; i < ingredientList.size(); i++) {
             ingredientMap.put(ingredientList.get(i).getID(), ingredientList.get(i).getName());
         }
@@ -55,7 +53,7 @@ public class RecipeLocalMenuFXMLController implements Initializable, GuiHelper {
     }    
 
     @FXML
-    private void recipe_viewRecipeActionPerformed(ActionEvent event) { 
+    private void viewRecipe(ActionEvent event) { 
         int curInd = recipe_recipeList.getSelectionModel().getSelectedIndex();
         if (curInd >= 0) {
             Recipe curRecipe = (Recipe) recipe_recipeList.getSelectionModel().getSelectedItem();
@@ -84,7 +82,7 @@ public class RecipeLocalMenuFXMLController implements Initializable, GuiHelper {
     }
     
     @FXML
-    private void recipe_deleteRecipeActionPerformed(ActionEvent event) {
+    private void deleteRecipe(ActionEvent event) {
         int curInd = recipe_recipeList.getSelectionModel().getSelectedIndex();
         if (curInd >= 0) {
             Recipe curRecipe = (Recipe) recipe_recipeList.getSelectionModel().getSelectedItem();
@@ -107,20 +105,8 @@ public class RecipeLocalMenuFXMLController implements Initializable, GuiHelper {
     }
 
     @Override
-    public boolean checkNull() {
-        return true;
-    }
-
-    @Override
     public void resetComponent() {
         //recipe_recipeList = new ListView();
         recipe_recipeList.setItems(recipeList.sorted((Recipe i1, Recipe i2) -> i1.getName().compareToIgnoreCase(i2.getName())));
-    }
-
-    @Override
-    public void closeFrame() {
-        
-    }
-
-    
+    }    
 }

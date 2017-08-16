@@ -5,6 +5,7 @@
  */
 package RecipeNow;
 
+import RecipeNow.app.DatabaseHelper;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -38,8 +39,6 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
     private Button loginPage_Login;
     
     
-    public static DatabaseHelper db;
-    private boolean isAuthenticated = false;
     private String username;
     private int userid;
 
@@ -55,17 +54,16 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        db = app.db;
     }
     
     
     @FXML
-    private void loginPage_printAccounts(ActionEvent event) {
-        db.printUserTable();
+    private void printUsers(ActionEvent event) {
+        DatabaseHelper.printUserTable();
     }
 
     @FXML
-    private void loginPage_DeleteActionPerformed(ActionEvent event) {
+    private void deleteUser(ActionEvent event) {
         // Check if login and pw text fields are filled 
         boolean checkNull = checkNull();
 
@@ -76,7 +74,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
             String query = "SELECT * FROM recipe_users WHERE username = '" + userName + "'";
             ResultSet res;
             try {
-                res = db.getQuerySet(query);
+                res = DatabaseHelper.getQuerySet(query);
                 if (res.first()) {
                     if (res.getString("password").trim().equals(userPw)) {
                         int userID = res.getInt("userID");
@@ -85,7 +83,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                         
                         new Alert(Alert.AlertType.INFORMATION, "You may delete this account now \nUserid: " + userID + 
                                 "\nUsername:" + userName).showAndWait();
-                        boolean deleteSuccess = db.deleteAccount(userName);
+                        boolean deleteSuccess = DatabaseHelper.deleteAccount(userName);
                         if (deleteSuccess) {
                             new Alert(Alert.AlertType.INFORMATION, "Account deleted\nUserid: " + userID
                                 + "\nUsername: " + userName).showAndWait();
@@ -110,7 +108,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
 
 
     @FXML
-    private void loginPage_registrationActionPerformed(ActionEvent event) {
+    private void registerUser(ActionEvent event) {
          // Check if login and pw text fields are filled 
         boolean checkNull = checkNull();
         boolean hasDuplicate;
@@ -122,7 +120,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
             //System.out.println(password);
             //String IQuery = "INSERT INTO `recipe_users`(`username`,`password`) VALUES('" + username + "', '" + password + "')";
             //System.out.println(IQuery);//print on console
-            hasDuplicate = db.userInsertIntoTable(userName, passWord);
+            hasDuplicate = DatabaseHelper.userInsertIntoTable(userName, passWord);
             if (hasDuplicate) {
                 System.out.println("Registration failed");
                 new Alert(Alert.AlertType.ERROR, "The username is already taken or Server Connection has failed").showAndWait();
@@ -133,11 +131,11 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                 //loginPage_LoginActionPerformed(evt);
                 resetComponent();
             }
-            db.printUserTable();
+            DatabaseHelper.printUserTable();
         }
     }
     @FXML
-    private void loginPage_LoginActionPerformed(ActionEvent event) throws IOException {
+    private void loginUser(ActionEvent event) throws IOException {
         // Check if login and pw text fields are filled 
         boolean checkNull = checkNull();
         if (!checkNull) {
@@ -147,7 +145,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
             ResultSet res;
 
             // Get data from mysql
-            res = db.getQuerySet(query);
+            res = DatabaseHelper.getQuerySet(query);
 
             // Run through resultset
             boolean auth = false;
@@ -160,7 +158,6 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                         user = true;
                         if (res.getString("password").trim().equals(userPw)) {
                             // Authenticated
-                            this.isAuthenticated = true;
                             this.setUserid(res.getInt("userID"));
                             this.setUsername(userName);
                             Alert success = new Alert(Alert.AlertType.INFORMATION, "Login Success\nUserid:" + getUserid() + "\nUsername: " +getUsername());
@@ -184,7 +181,7 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
                 alert.setContentText("That username does not exist, would you like to register?");
                 Optional<ButtonType> register =  alert.showAndWait();
                 if (register.get() == ButtonType.OK) {
-                    loginPage_registrationActionPerformed(event);
+                    registerUser(event);
                 }
             } else if (!auth) {
                 new Alert(Alert.AlertType.ERROR, "Authentication Failed, incorrect password").showAndWait();
@@ -198,7 +195,6 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
     }
     
     
-    @Override
     public boolean checkNull() {
         // Check if the two textfields are null or default    
         return loginPage_userName.getText().equals("") || loginPage_passWord.getText().length() == 0;
@@ -211,9 +207,8 @@ public class NewUserViewFXController  implements Initializable, GuiHelper {
         loginPage_passWord.setText("");
     }
 
-    @Override
-    public void closeFrame() {
-        db.closeConnection();
+    public void stop() {
+        DatabaseHelper.closeConnection();
     }
 
     private void goToMainMenu() throws IOException{
