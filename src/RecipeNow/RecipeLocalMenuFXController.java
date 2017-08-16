@@ -19,7 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 
-public class RecipeLocalMenuFXMLController implements Initializable, GuiHelper {
+public class RecipeLocalMenuFXController implements Initializable, GuiHelper {
 
     @FXML
     private ListView recipe_recipeList;
