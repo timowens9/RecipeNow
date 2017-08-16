@@ -5,9 +5,9 @@
  */
 package RecipeNow;
 
+import RecipeNow.app.DatabaseHelper;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -30,10 +30,8 @@ import javafx.scene.Node;
  *
  * @author Youngmin
  */
-public class MainMenuFXController implements Initializable {
-    
-    private DatabaseHelper db;
-    
+public class MainMenuFXController implements Initializable, GuiHelper {
+       
     @FXML
     private Button mainMenu_ingButton;
     @FXML
@@ -53,13 +51,12 @@ public class MainMenuFXController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        db = app.db;
     }    
     
 
     @FXML
     // Ingredient Menu 
-    private void mainMenu_addIngAction(ActionEvent event) throws IOException {
+    private void goToIngredientMenu(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("IngredientMenuFXML.fxml"));
         AnchorPane ingMenu = (AnchorPane) loader.load();
         Stage stage = new Stage();
@@ -70,7 +67,7 @@ public class MainMenuFXController implements Initializable {
     
     @FXML
     // Recipe Menu
-    private void mainMenu_addRecipeAction(ActionEvent event) throws IOException {
+    private void goToRecipeMenu(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("RecipeMenuFXML.fxml"));
         AnchorPane recipeMenu = (AnchorPane) loader.load();
         Stage stage = new Stage();
@@ -81,7 +78,7 @@ public class MainMenuFXController implements Initializable {
     
     @FXML
     // Local Recipe Menu
-    private void mainMenu_localRecipeAction(ActionEvent event) throws IOException {
+    private void goToLocalRecipeMenu(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("RecipeLocalMenuFXML.fxml"));
         AnchorPane recipeMenu = (AnchorPane) loader.load();
         Stage stage = new Stage();
@@ -91,16 +88,13 @@ public class MainMenuFXController implements Initializable {
     }
     
     @FXML 
-    private void mainMenu_logoutAction(ActionEvent event) throws IOException {
+    private void logout(ActionEvent event) throws IOException {
         app.base.setScene(app.login);
         app.base.setTitle("RecipeNow - Login");
     }
-    private void stop(){
-        db.closeConnection();
-    }
 
     @FXML
-    private void mainMenu_changeUserName(ActionEvent event) {
+    private void changeUsername(ActionEvent event) {
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Change Username");
@@ -117,7 +111,8 @@ public class MainMenuFXController implements Initializable {
         grid.setPadding(new Insets(20, 150, 10, 10));
         
         TextField username = new TextField();
-        username.setPromptText("Current Username");
+        username.setText(app.loginCntl.getUsername());
+        username.setEditable(false);
         TextField username2 = new TextField();
         username2.setPromptText("New Username");
         
@@ -154,9 +149,10 @@ public class MainMenuFXController implements Initializable {
                 new Alert(Alert.AlertType.ERROR, "The entered new username is same as the current username").showAndWait();
             } else {
                 // Do username update
-                boolean updateResult = db.changeUserName(usernamePassword.getKey(), usernamePassword.getValue());
+                boolean updateResult = DatabaseHelper.changeUserName(usernamePassword.getKey(), usernamePassword.getValue());
                 if(updateResult) {
                     new Alert(Alert.AlertType.INFORMATION, "Username change successful").showAndWait();
+                    app.loginCntl.setUsername(usernamePassword.getValue());
                 } else {
                     new Alert(Alert.AlertType.ERROR, "Username change failed").showAndWait();
                 }
@@ -165,11 +161,11 @@ public class MainMenuFXController implements Initializable {
     }
 
     @FXML
-    private void mainMenu_changePassWord(ActionEvent event) {
+    private void changePassword(ActionEvent event) {
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Change Password");
-        dialog.setHeaderText("Etner a new Password");
+        dialog.setHeaderText("Enter a new Password");
         
         // Set the button types.
         ButtonType loginButtonType = new ButtonType("Change", ButtonData.OK_DONE);
@@ -182,41 +178,42 @@ public class MainMenuFXController implements Initializable {
         grid.setPadding(new Insets(20, 150, 10, 10));
         
         TextField username = new TextField();
-        username.setPromptText("Current Username");
-        TextField username2 = new TextField();
-        username2.setPromptText("New Password");
+        username.setText(app.loginCntl.getUsername());
+        username.setEditable(false);
+        TextField password = new TextField();
+        password.setPromptText("New Password");
         
         grid.add(new Label("Username:"), 0, 0);
         grid.add(username, 1, 0);
         grid.add(new Label("New Password:"), 0, 1);
-        grid.add(username2, 1, 1);
+        grid.add(password, 1, 1);
 
         // Enable/Disable login button depending on whether a username was entered.
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
         
         // Do some validation (using the Java 8 lambda syntax).
-        username2.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(newValue.trim().isEmpty());
+        password.textProperty().addListener((observable, oldValue, newValue) -> {
+            loginButton.setDisable(newValue.trim().isEmpty() || password.getText().isEmpty());
         });
         
         dialog.getDialogPane().setContent(grid);
         
         // Request focus on the username field by default.
-        Platform.runLater(() -> username2.requestFocus());
+        Platform.runLater(() -> password.requestFocus());
         
         // Convert the result to a username-password-pair when the login button is clicked.
-        dialog.setResultConverter(dialogButton -> {
+        dialog.setResultConverter((ButtonType dialogButton) -> {
             if (dialogButton == loginButtonType) {
-                return new Pair<>(username.getText(), username2.getText());
-        }
-        return null;
+                return new Pair<>(username.getText(), password.getText());
+            }
+            return null;
         });
         
         Optional<Pair<String, String>> result = dialog.showAndWait();
         result.ifPresent(usernamePassword -> {
                 // Do username update
-                boolean updateResult = db.changeUserPassword(usernamePassword.getKey(), usernamePassword.getValue());
+                boolean updateResult = DatabaseHelper.changeUserPassword(usernamePassword.getKey(), usernamePassword.getValue());
                 if(updateResult) {
                     new Alert(Alert.AlertType.INFORMATION, "Password change successful").showAndWait();
                 } else {
@@ -225,6 +222,13 @@ public class MainMenuFXController implements Initializable {
             }
         );
     }
+
+
+    @Override
+    public void resetComponent() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
 
 

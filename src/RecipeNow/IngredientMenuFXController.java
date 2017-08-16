@@ -5,6 +5,7 @@
  */
 package RecipeNow;
 
+import RecipeNow.app.DatabaseHelper;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -33,7 +34,6 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
     @FXML
     private ListView newIng_ingredientList;
     
-    private DatabaseHelper db;
     @FXML
     private Button newIng_addIng;
     @FXML
@@ -47,20 +47,19 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        db = app.db;
-        ingredientList = db.updateIngredientList(ingredientList);
+        ingredientList = DatabaseHelper.updateIngredientList(ingredientList);
         newIng_ingredientList.setItems(ingredientList.sorted((Ingredient i1, Ingredient i2) -> i1.getName().compareToIgnoreCase(i2.getName())));
     }    
     
     @FXML
-    private void newIng_addIngActionPerformed(ActionEvent event) {
+    private void addIngredient(ActionEvent event) {
         //Custom Add Ingredient dialog box using http://code.makery.ch/blog/javafx-dialogs-official/ tutorial.
         showDialog(false);
         
     }
 
     @FXML
-    private void newIng_editIngActionPerformed(ActionEvent event) {
+    private void editIngredient(ActionEvent event) {
         int curInd = newIng_ingredientList.getSelectionModel().getSelectedIndex();
         if (curInd >= 0){
             showDialog(true);
@@ -68,7 +67,7 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
     }
     
     @FXML
-    private void newIng_deleteIngActionPerformed(ActionEvent event) {
+    private void deleteIngredient(ActionEvent event) {
         int curInd = newIng_ingredientList.getSelectionModel().getSelectedIndex();
         if (curInd >= 0){
             Ingredient curIngredient = (Ingredient) newIng_ingredientList.getSelectionModel().getSelectedItem();
@@ -77,7 +76,7 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
             confirmation.setHeaderText("Delete Ingredient?");
             confirmation.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK){
-                    db.ingredientDeleteIntoTable(curIngredient);
+                    DatabaseHelper.ingredientDeleteIntoTable(curIngredient);
                     ingredientList.remove(curIngredient);
                     resetComponent();
                 }
@@ -90,20 +89,13 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
         }
     }
 
-    @Override
-    public boolean checkNull() {
-        return false;
-    }
 
     @Override
     public void resetComponent() {
-        ingredientList = db.updateIngredientList(ingredientList);
+        ingredientList = DatabaseHelper.updateIngredientList(ingredientList);
         newIng_ingredientList.setItems(ingredientList.sorted((Ingredient i1, Ingredient i2) -> i1.getName().compareToIgnoreCase(i2.getName())));
     }
 
-    @Override
-    public void closeFrame() {
-    }
     public void showDialog(boolean edit){
         Dialog<Ingredient> addIng = new Dialog<>();
         Ingredient ingredient = (Ingredient)newIng_ingredientList.getSelectionModel().getSelectedItem();
@@ -169,9 +161,9 @@ public class IngredientMenuFXController implements Initializable, GuiHelper {
         
         result.ifPresent(tempIngredient -> {
             if (edit)
-                db.ingredientEditIntoTable(tempIngredient);
+                DatabaseHelper.ingredientEditIntoTable(tempIngredient);
             else
-                db.ingredientInsertIntoTable(tempIngredient);
+                DatabaseHelper.ingredientInsertIntoTable(tempIngredient);
             resetComponent();
         });
     }

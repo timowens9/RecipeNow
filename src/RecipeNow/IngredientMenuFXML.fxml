@@ -6,9 +6,9 @@
 
 <AnchorPane id="AnchorPane" fx:id="IngMenu" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RecipeNow.IngredientMenuFXController">
     <children>
-        <Button fx:id="newIng_addIng" layoutX="168.0" layoutY="291.0" mnemonicParsing="false" onAction="#newIng_addIngActionPerformed" prefHeight="23.0" prefWidth="266.0" text="Add Ingredient" />
-        <Button fx:id="newIng_editIng" layoutX="167.0" layoutY="320.0" mnemonicParsing="false" onAction="#newIng_editIngActionPerformed" prefHeight="23.0" prefWidth="266.0" text="Edit Ingredient" />
-        <Button fx:id="newIng_deleteIng" layoutX="167.0" layoutY="347.0" mnemonicParsing="false" onAction="#newIng_deleteIngActionPerformed" prefHeight="23.0" prefWidth="266.0" text="Delete Ingredient" />
+        <Button fx:id="newIng_addIng" layoutX="168.0" layoutY="291.0" mnemonicParsing="false" onAction="#addIngredient" prefHeight="23.0" prefWidth="266.0" text="Add Ingredient" />
+        <Button fx:id="newIng_editIng" layoutX="167.0" layoutY="320.0" mnemonicParsing="false" onAction="#editIngredient" prefHeight="23.0" prefWidth="266.0" text="Edit Ingredient" />
+        <Button fx:id="newIng_deleteIng" layoutX="167.0" layoutY="347.0" mnemonicParsing="false" onAction="#deleteIngredient" prefHeight="23.0" prefWidth="266.0" text="Delete Ingredient" />
       <ListView fx:id="newIng_ingredientList" layoutX="113.0" layoutY="15.0" prefHeight="250.0" prefWidth="400.0" />
     </children>
 </AnchorPane>
